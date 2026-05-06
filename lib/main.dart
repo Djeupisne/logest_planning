@@ -28,8 +28,28 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Theme mode par défaut (s'adapte au système)
+  ThemeMode _themeMode = ThemeMode.system;
+
+  void toggleTheme() {
+    setState(() {
+      if (_themeMode == ThemeMode.light) {
+        _themeMode = ThemeMode.dark;
+      } else if (_themeMode == ThemeMode.dark) {
+        _themeMode = ThemeMode.system;
+      } else {
+        _themeMode = ThemeMode.light;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +61,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Logest Planning',
         debugShowCheckedModeBanner: false,
+        themeMode: _themeMode,
         theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
         initialRoute: AppRoutes.home,
         onGenerateRoute: AppRoutes.generateRoute,
       ),
