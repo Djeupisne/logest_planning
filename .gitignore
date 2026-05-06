@@ -11,62 +11,39 @@ __pycache__/
 *.out
 
 # Dependencies
-node_modules/
-venv/
 .venv/
-.env
-.env.local
-.env.*
-
-# Build outputs
+venv/
+node_modules/
 dist/
 build/
 target/
-*.log
-coverage/
-htmlcov/
-.coverage
+.gradle/
+.mypy_cache/
+.pytest_cache/
 
-# Editors/IDEs
-.vscode/
-.idea/
+# Logs and temp files
+*.log
+*.tmp
 *.swp
 *.swo
-*.tmp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
 
 # System files
 .DS_Store
 Thumbs.db
-.git/
 
-# Python specific
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Dart/Flutter specific
-.dart_tool/
-.packages
-.pub-cache/
-pubspec.lock
-*.g.dart
-*.freezed.dart
+# Coverage
+coverage/
+htmlcov/
+.coverage
 
 # Compressed files
 *.zip
