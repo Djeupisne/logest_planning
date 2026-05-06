@@ -34,15 +34,16 @@ class AppColors {
   static const Color training = Color(0xFFFCD34D);      // Jaune doré - Formation
   static const Color leave = Color(0xFF3B82F6);         // Bleu - Congé
   
-  // --- Couleurs Neutres LIGHT (Optimisées pour la lisibilité) ---
-  static const Color backgroundLight = Color(0xFFF8FAFC); // Blanc grisâtre très léger (réduit la fatigue)
+  // --- Couleurs Neutres LIGHT (Optimisées pour la lisibilité - Fond Blanc) ---
+  static const Color backgroundLight = Color(0xFFFFFFFF); // BLANC PUR pour le fond global
   static const Color surfaceLight = Color(0xFFFFFFFF);    // Blanc pur pour les cartes
-  static const Color textPrimaryLight = Color(0xFF1E293B); // Gris très foncé (plus doux que #000)
-  static const Color textSecondaryLight = Color(0xFF64748B); // Gris moyen pour textes secondaires
+  static const Color scaffoldBackgroundLight = Color(0xFFF8FAFC); // Gris très léger pour différencier les zones
+  static const Color textPrimaryLight = Color(0xFF0F172A); // Noir doux (contraste max sur blanc)
+  static const Color textSecondaryLight = Color(0xFF475569); // Gris moyen pour textes secondaires
   static const Color textTertiaryLight = Color(0xFF94A3B8); // Gris clair pour infos mineures
   static const Color dividerLight = Color(0xFFE2E8F0);    // Bordures subtiles
   static const Color cardBackgroundLight = Color(0xFFFFFFFF);
-  static const Color shadowLight = Color(0x1A000000);     // Ombre légère
+  static const Color shadowLight = Color(0x0D000000);     // Ombre ultra-légère pour effet de profondeur
   
   // --- Couleurs Neutres DARK (Élégantes et Reposantes) ---
   static const Color backgroundDark = Color(0xFF0F172A);  // Bleu nuit très profond (élégant)
@@ -136,7 +137,7 @@ class AppTheme {
       error: AppColors.error,
     ),
     
-    // Scaffold
+    // Scaffold - Fond blanc pur
     scaffoldBackgroundColor: AppColors.backgroundLight,
     
     // AppBar
