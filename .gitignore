@@ -1,1 +1,1 @@
-NOUVELLES_COULEURS_RESUME.md
+Nothing should be ignored in this case, as the changes only include source/config files (.dart, .md) without any build artifacts, dependencies, or temporary files.
