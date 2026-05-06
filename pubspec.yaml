@@ -41,7 +41,7 @@ dependencies:
   # UI/UX Improvements - Top 10
   lottie: ^3.0.0                    # Animations fluides
   shimmer: ^3.0.0                   # Loading skeletons
-  vibration_plus: ^2.0.0            # Feedback haptique (compatible Flutter moderne)
+  vibration: ^2.0.0                 # Feedback haptique (compatible Flutter moderne)
   signature: ^5.4.0                 # Signature électronique avancée
   pdf: ^3.10.8                      # Export PDF signatures
   flutter_polyline_points: ^2.0.0   # Trajets GPS optimisés
