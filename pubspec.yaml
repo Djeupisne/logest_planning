@@ -37,6 +37,24 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_map: ^8.3.0
   latlong2: ^0.9.1
+  
+  # UI/UX Improvements - Top 10
+  lottie: ^3.0.0                    # Animations fluides
+  shimmer: ^3.0.0                   # Loading skeletons
+  vibration: ^1.8.4                 # Feedback haptique
+  signature: ^5.4.0                 # Signature électronique avancée
+  pdf: ^3.10.8                      # Export PDF signatures
+  flutter_polyline_points: ^2.0.0   # Trajets GPS optimisés
+  flutter_drag_and_drop_lists: ^1.0.0 # Drag & Drop planning
+  flutter_localizations:
+    sdk: flutter                    # Support multi-langues
+  animated_text_kit: ^4.2.2         # Textes animés
+  percent_indicator: ^4.2.3         # Indicateurs circulaires
+  flutter_staggered_animations: ^1.1.1 # Animations en cascade
+  syncfusion_flutter_charts: ^27.1.50 # Dashboard direction
+  timeline_tile: ^2.0.0             # Timeline missions
+  badges: ^3.1.2                    # Badges notifications
+  introduction_screen: ^3.1.14      # Onboarding moderne
 
 dev_dependencies:
   flutter_test:
