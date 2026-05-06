@@ -19,12 +19,24 @@ class _DirectionHomeState extends State<DirectionHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Text('Direction Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
         actions: [
-          IconButton(icon: const Icon(Icons.file_download), onPressed: () => _exportCSV()),
-          IconButton(icon: const Icon(Icons.print), onPressed: () => _showSuccess('Impression lancée')),
+          IconButton(
+            icon: const Icon(Icons.file_download),
+            tooltip: 'Exporter CSV',
+            onPressed: () => _exportCSV(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.print),
+            tooltip: 'Imprimer',
+            onPressed: () => _showSuccess('Impression lancée'),
+          ),
         ],
       ),
       body: SingleChildScrollView(
