@@ -405,7 +405,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
       padding: const EdgeInsets.only(left: 4, bottom: 12),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
       ),
     );
   }

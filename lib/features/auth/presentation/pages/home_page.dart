@@ -8,16 +8,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor.withOpacity(0.7),
-              Colors.blueAccent.withOpacity(0.8),
-            ],
-          ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
         ),
         child: SafeArea(
           child: SingleChildScrollView(
@@ -51,11 +43,11 @@ class HomePage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.grey.withOpacity(0.1),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -75,7 +67,7 @@ class HomePage extends StatelessWidget {
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Theme.of(context).primaryColor,
               letterSpacing: 1.2,
             ),
           ),
@@ -87,7 +79,7 @@ class HomePage extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.grey[700],
               height: 1.5,
             ),
           ),
@@ -101,15 +93,9 @@ class HomePage extends StatelessWidget {
       margin: const EdgeInsets.all(24),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).primaryColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,10 +175,10 @@ class HomePage extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
               const SizedBox(height: 4),
@@ -225,10 +211,10 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, AppRoutes.login);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Theme.of(context).primaryColor,
-                elevation: 8,
-                shadowColor: Colors.black.withOpacity(0.3),
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+                elevation: 4,
+                shadowColor: Theme.of(context).primaryColor.withOpacity(0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -260,8 +246,8 @@ class HomePage extends StatelessWidget {
                 _showInfoDialog(context);
               },
               style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: const BorderSide(color: Colors.white, width: 2),
+                foregroundColor: Theme.of(context).primaryColor,
+                side: BorderSide(color: Theme.of(context).primaryColor, width: 2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
