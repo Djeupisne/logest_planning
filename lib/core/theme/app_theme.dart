@@ -1,50 +1,90 @@
 import 'package:flutter/material.dart';
 
-/// Palette de couleurs étendue pour le thème sombre et clair
+/// Palette de couleurs moderne et professionnelle pour LOGEST
+/// Conçue pour une excellente lisibilité, un contraste optimal et une esthétique premium.
 class AppColors {
-  // Couleurs principales LOGEST
-  static const Color primary = Color(0xFF1976D2);      // Bleu professionnel
-  static const Color primaryDark = Color(0xFF1565C0);
-  static const Color primaryLight = Color(0xFFBBDEFB);
-  static const Color primaryAccent = Color(0xFF64B5F6);
+  // --- Couleurs Primaires (Confiance & Technologie) ---
+  static const Color primary = Color(0xFF2563EB);      // Bleu Roi Moderne (Plus vibrant et professionnel)
+  static const Color primaryDark = Color(0xFF1E40AF);  // Bleu Nuit pour presse/ombre
+  static const Color primaryLight = Color(0xFFDBEAFE); // Bleu très pâle pour fonds de section
+  static const Color primaryAccent = Color(0xFF3B82F6); // Bleu clair accent
   
-  // Couleurs de statut
-  static const Color success = Color(0xFF4CAF50);       // Vert - Mission terminée/facturée
-  static const Color warning = Color(0xFFFF9800);       // Orange - En cours/retard
-  static const Color error = Color(0xFFF44336);         // Rouge - Problème
-  static const Color info = Color(0xFF2196F3);          // Bleu - En route/arrivé
+  // --- Couleurs Secondaires (Action & Dynamisme) ---
+  static const Color secondary = Color(0xFF0EA5E9);    // Bleu Ciel Électrique
+  static const Color secondaryDark = Color(0xFF0284C7);
+  static const Color secondaryLight = Color(0xFFE0F2FE);
   
-  // Couleurs de type de mission
-  static const Color billed = Color(0xFF4CAF50);        // Vert - Facturée
-  static const Color interContract = Color(0xFF9E9E9E); // Gris - Inter-contrat
-  static const Color training = Color(0xFFFFEB3B);      // Jaune - Formation
-  static const Color leave = Color(0xFF2196F3);         // Bleu - Congé
+  // --- Couleurs d'Accent (Appels à l'action & Notifications) ---
+  static const Color accent = Color(0xFFF97316);       // Orange Corail (Chaleureux mais pro)
+  static const Color accentDark = Color(0xFFEA580C);
   
-  // Couleurs neutres LIGHT
-  static const Color backgroundLight = Color(0xFFF5F5F5);
-  static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color textPrimaryLight = Color(0xFF212121);
-  static const Color textSecondaryLight = Color(0xFF757575);
-  static const Color dividerLight = Color(0xFFE0E0E0);
+  // --- Couleurs de Statut (Sémantiques Modernes) ---
+  static const Color success = Color(0xFF10B981);      // Vert Émeraude (Plus doux et moderne)
+  static const Color successLight = Color(0xFFD1FAE5);
+  static const Color warning = Color(0xFFF59E0B);      // Amber (Attention bienveillante)
+  static const Color warningLight = Color(0xFFFEF3C7);
+  static const Color error = Color(0xFFEF4444);        // Rouge Doux (Alerte sans agressivité)
+  static const Color errorLight = Color(0xFFFEE2E2);
+  static const Color info = Color(0xFF3B82F6);         // Bleu Info
+  static const Color infoLight = Color(0xFFDBEAFE);
+  
+  // --- Couleurs de Type de Mission (Code Couleur Clair) ---
+  static const Color billed = Color(0xFF10B981);        // Vert émeraude - Facturée
+  static const Color interContract = Color(0xFF9CA3AF); // Gris moderne - Inter-contrat
+  static const Color training = Color(0xFFFCD34D);      // Jaune doré - Formation
+  static const Color leave = Color(0xFF3B82F6);         // Bleu - Congé
+  
+  // --- Couleurs Neutres LIGHT (Optimisées pour la lisibilité) ---
+  static const Color backgroundLight = Color(0xFFF8FAFC); // Blanc grisâtre très léger (réduit la fatigue)
+  static const Color surfaceLight = Color(0xFFFFFFFF);    // Blanc pur pour les cartes
+  static const Color textPrimaryLight = Color(0xFF1E293B); // Gris très foncé (plus doux que #000)
+  static const Color textSecondaryLight = Color(0xFF64748B); // Gris moyen pour textes secondaires
+  static const Color textTertiaryLight = Color(0xFF94A3B8); // Gris clair pour infos mineures
+  static const Color dividerLight = Color(0xFFE2E8F0);    // Bordures subtiles
   static const Color cardBackgroundLight = Color(0xFFFFFFFF);
+  static const Color shadowLight = Color(0x1A000000);     // Ombre légère
   
-  // Couleurs neutres DARK
-  static const Color backgroundDark = Color(0xFF121212);
-  static const Color surfaceDark = Color(0xFF1E1E1E);
-  static const Color textPrimaryDark = Color(0xFFE0E0E0);
-  static const Color textSecondaryDark = Color(0xFFB0B0B0);
-  static const Color dividerDark = Color(0xFF2C2C2C);
-  static const Color cardBackgroundDark = Color(0xFF2C2C2C);
+  // --- Couleurs Neutres DARK (Élégantes et Reposantes) ---
+  static const Color backgroundDark = Color(0xFF0F172A);  // Bleu nuit très profond (élégant)
+  static const Color surfaceDark = Color(0xFF1E293B);     // Gris bleuté pour les cartes
+  static const Color textPrimaryDark = Color(0xFFF1F5F9); // Blanc cassé
+  static const Color textSecondaryDark = Color(0xFF94A3B8); // Gris clair
+  static const Color textTertiaryDark = Color(0xFF64748B); // Gris moyen pour dark mode
+  static const Color dividerDark = Color(0xFF334155);     // Séparateurs discrets
+  static const Color cardBackgroundDark = Color(0xFF1E293B);
+  static const Color shadowDark = Color(0x4D000000);      // Ombre profonde
   
-  // Dégradés
+  // --- Couleurs Spécifiques LOGEST ---
+  static const Color logestBlue = Color(0xFF2563EB);
+  static const Color logestOrange = Color(0xFFF97316);
+  
+  // --- Dégradés Modernes ---
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primary, primaryDark],
+    colors: [primary, secondary],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  
+  static const LinearGradient accentGradient = LinearGradient(
+    colors: [accent, Color(0xFFFB923C)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
   
   static const LinearGradient successGradient = LinearGradient(
-    colors: [Color(0xFF66BB6A), Color(0xFF43A047)],
+    colors: [Color(0xFF34D399), Color(0xFF10B981)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  
+  static const LinearGradient warningGradient = LinearGradient(
+    colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  
+  static const LinearGradient errorGradient = LinearGradient(
+    colors: [Color(0xFFF87171), Color(0xFFEF4444)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -55,10 +95,10 @@ class AppColors {
     end: Alignment.bottomRight,
   );
   
-  // Ombres
+  // Ombres Modernes
   static List<BoxShadow> get cardShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.08),
+      color: shadowLight,
       blurRadius: 12,
       offset: const Offset(0, 4),
     ),
@@ -66,7 +106,7 @@ class AppColors {
   
   static List<BoxShadow> get elevatedShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.12),
+      color: shadowLight,
       blurRadius: 16,
       offset: const Offset(0, 6),
     ),
@@ -74,7 +114,7 @@ class AppColors {
   
   static List<BoxShadow> get floatingShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.2),
+      color: shadowLight,
       blurRadius: 20,
       offset: const Offset(0, 8),
     ),
