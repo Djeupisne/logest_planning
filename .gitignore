@@ -10,33 +10,35 @@
 
 # Dependencies
 node_modules/
-.venv/
 venv/
+.venv/
 __pycache__/
 .mypy_cache/
 .pytest_cache/
 target/
 .gradle/
 
-# Logs and temporary files
-*.log
-*.tmp
+# Editor/IDE files
+.vscode/
+.idea/
 *.swp
 *.swo
+*.tmp
 
-# Environment variables
+# System files
+.DS_Store
+Thumbs.db
 .env
 .env.local
 *.env.*
 
-# Coverage reports
+# Logs
+*.log
+
+# Coverage
 coverage/
 htmlcov/
 .coverage
-
-# OS generated files
-.DS_Store
-Thumbs.db
 
 # Compressed files
 *.zip
