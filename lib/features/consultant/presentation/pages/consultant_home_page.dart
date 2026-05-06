@@ -20,6 +20,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
   int _selectedIndex = 0;
   File? _incidentImage;
   final ImagePicker _imagePicker = ImagePicker();
+  final List<Map<String, dynamic>> _reportedIncidents = [];
 
   final List<Map<String, dynamic>> _missions = [
     {'id': 1, 'title': "Installation réseau", 'client': "Banque Sahélo-Saharienne", 'address': "Avenue Charles de Gaulle, N'Djamena", 'lat': 12.1348, 'lng': 15.0557, 'start': "09:00", 'end': "12:00", 'status': "en_route", 'contact': "M. Ibrahim", 'phone': "+235 66 12 34 56"},
@@ -232,6 +233,12 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
         ListTile(leading: const Icon(Icons.phone), title: const Text('+235 66 12 34 56')),
         const Divider(),
         ListTile(
+          leading: const Icon(Icons.bug_report, color: Colors.orange),
+          title: Text('Incidents signalés (${_reportedIncidents.length})', style: const TextStyle(fontWeight: FontWeight.bold)),
+          onTap: () => _showIncidentsList(),
+        ),
+        const Divider(),
+        ListTile(
           leading: const Icon(Icons.logout, color: Colors.red),
           title: const Text('Se déconnecter', style: TextStyle(color: Colors.red)),
           onTap: () => _confirmLogout(),
@@ -325,14 +332,29 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
                         : Container(height: 100, color: Colors.grey[200], child: const Center(child: Text('Aucune photo'))),
                   ),
                   const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () async {
-                      final picked = await _imagePicker.pickImage(source: ImageSource.camera);
-                      if (picked != null) {
-                        setDialogState(() => _incidentImage = File(picked.path));
-                      }
-                    },
-                    icon: const Icon(Icons.camera_alt),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          final picked = await _imagePicker.pickImage(source: ImageSource.camera);
+                          if (picked != null) {
+                            setDialogState(() => _incidentImage = File(picked.path));
+                          }
+                        },
+                        icon: const Icon(Icons.camera_alt),
+                        tooltip: 'Prendre une photo',
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          final picked = await _imagePicker.pickImage(source: ImageSource.gallery);
+                          if (picked != null) {
+                            setDialogState(() => _incidentImage = File(picked.path));
+                          }
+                        },
+                        icon: const Icon(Icons.photo_library),
+                        tooltip: 'Choisir depuis la galerie',
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -342,8 +364,18 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
             TextButton(onPressed: () { Navigator.pop(context); _incidentImage = null; }, child: const Text('Annuler')),
             ElevatedButton(
               onPressed: () {
+                final description = 'Incident sur ${m['client']} - ${m['title']}';
+                _reportedIncidents.add({
+                  'missionId': m['id'],
+                  'client': m['client'],
+                  'title': m['title'],
+                  'description': description,
+                  'date': DateTime.now(),
+                  'hasPhoto': _incidentImage != null,
+                });
                 Navigator.pop(context);
                 _incidentImage = null;
+                setState(() {});
                 _showSnack('Incident signalé avec succès');
               },
               child: const Text('Envoyer'),
@@ -408,6 +440,39 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
 
   void _showSnack(String msg) =>
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+
+  void _showIncidentsList() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Incidents signalés'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: _reportedIncidents.isEmpty
+              ? const Center(child: Text('Aucun incident signalé'))
+              : ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _reportedIncidents.length,
+                  itemBuilder: (_, i) {
+                    final inc = _reportedIncidents[i];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      child: ListTile(
+                        leading: Icon(Icons.report_problem, color: Colors.orange),
+                        title: Text('${inc['client']} - ${inc['title']}'),
+                        subtitle: Text('${inc['date'].toString().substring(0, 16)}${inc['hasPhoto'] ? ' 📷' : ''}'),
+                        isThreeLine: true,
+                      ),
+                    );
+                  },
+                ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer')),
+        ],
+      ),
+    );
+  }
 
   String _statusLabel(String s) => {'en_route': 'En route', 'arrived': 'Arrivé', 'in_progress': 'En intervention', 'planned': 'Planifié', 'completed': 'Terminé'}[s] ?? s;
   String _nextLabel(String s) => {'en_route': 'Arrivé', 'arrived': 'En intervention', 'in_progress': 'Terminé'}[s] ?? 'Planifié';
