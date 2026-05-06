@@ -1,40 +1,24 @@
-```
-# Build artifacts
-build/
-*.apk
-*.aab
-*.so
-*.dylib
-*.dll
-
 # Dependencies
-.pub/
 .dart_tool/
-build/
-
+.build/
+# Logs and temp files
+*.log
+*.tmp
 # Environment
 .env
 .env.local
-.env.*
-
-# Logs
-*.log
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# Testing
+.env.
+# Coverage
 coverage/
-*.coverage
+# Compiled and build artifacts
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+# Distribution
+dist/
+release/
+build/
 
-# Temporary files
-*.tmp
-*.temp
-```
+# Examples can be found in https://github.com/github/gitignore/blob/main/Dart.gitignore
