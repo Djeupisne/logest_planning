@@ -8,7 +8,6 @@ import 'package:logest_planning/core/services/export_notification_service.dart';
 import 'package:logest_planning/injection.dart';
 import 'package:logest_planning/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:logest_planning/features/consultant/presentation/bloc/mission_bloc.dart';
-import 'package:logest_planning/features/auth/presentation/pages/login_page.dart';
 import 'package:logest_planning/routes/app_router.dart';
 
 void main() async {
@@ -43,7 +42,7 @@ class MyApp extends StatelessWidget {
         title: 'Logest Planning',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        initialRoute: AppRoutes.login,
+        initialRoute: AppRoutes.home,
         onGenerateRoute: AppRoutes.generateRoute,
       ),
     );

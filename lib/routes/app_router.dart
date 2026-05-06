@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import '../features/auth/presentation/pages/home_page.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/consultant/presentation/pages/consultant_home_page.dart';
 import '../features/planner/presentation/pages/planner_dashboard.dart';
 import '../features/direction/presentation/pages/direction_home.dart';
 
 class AppRoutes {
-  static const String login = '/';
+  static const String home = '/';
+  static const String login = '/login';
   static const String consultant = '/consultant';
   static const String planner = '/planner';
   static const String director = '/director';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case home:
+        return MaterialPageRoute(builder: (_) => const HomePage());
       case login:
         return MaterialPageRoute(builder: (_) => const LoginPage());
       case consultant:
@@ -21,7 +25,7 @@ class AppRoutes {
       case director:
         return MaterialPageRoute(builder: (_) => const DirectionHome());
       default:
-        return MaterialPageRoute(builder: (_) => const LoginPage());
+        return MaterialPageRoute(builder: (_) => const HomePage());
     }
   }
 }
