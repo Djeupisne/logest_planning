@@ -1,21 +1,22 @@
-```
 # Build artifacts
-build/
-.dart_tool/
-*.g.dart
+/build/
+/dist/
 
 # Dependencies
-pubspec.lock
+/.dart_tool/
+/pub/
+/packages/
 
-# Logs
+# Logs and temp files
 *.log
+*.tmp
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# IDE files
+# Editor/IDE
 .vscode/
 .idea/
 *.swp
@@ -25,9 +26,9 @@ pubspec.lock
 .DS_Store
 Thumbs.db
 
-# Coverage
-coverage/
-htmlcov/
+# Coverage reports
+/coverage/
+/htmlcov/
 .coverage
 
 # Compressed files
@@ -53,4 +54,3 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-```

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vibration/vibration.dart';
+import 'package:vibration_plus/vibration_plus.dart';
 
 /// Service de feedback haptique pour améliorer l'UX
 /// Fournit des vibrations contextuelles pour les interactions utilisateur
@@ -11,7 +11,7 @@ class HapticService {
   /// Vérifie si le vibration est disponible
   Future<bool> get isVibrationAvailable async {
     try {
-      final available = await Vibration.hasVibrator();
+      final available = await VibrationPlus.hasVibrator();
       return available ?? false;
     } catch (e) {
       return false;
@@ -22,7 +22,7 @@ class HapticService {
   Future<void> lightClick() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(duration: 10);
+        await VibrationPlus.vibrate(duration: 10);
       } catch (e) {
         // Ignore si non disponible
       }
@@ -33,7 +33,7 @@ class HapticService {
   Future<void> mediumTap() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(duration: 30);
+        await VibrationPlus.vibrate(duration: 30);
       } catch (e) {
         // Ignore si non disponible
       }
@@ -44,7 +44,7 @@ class HapticService {
   Future<void> heavyImpact() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(duration: 50);
+        await VibrationPlus.vibrate(duration: 50);
       } catch (e) {
         // Ignore si non disponible
       }
@@ -55,9 +55,9 @@ class HapticService {
   Future<void> success() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(pattern: [0, 50, 50, 50], intensities: [0, 128, 0, 128]);
+        await VibrationPlus.vibrate(pattern: [0, 50, 50, 50], intensities: [0, 128, 0, 128]);
       } catch (e) {
-        await Vibration.vibrate(duration: 100);
+        await VibrationPlus.vibrate(duration: 100);
       }
     }
   }
@@ -66,9 +66,9 @@ class HapticService {
   Future<void> error() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(pattern: [0, 100, 50, 100], intensities: [0, 255, 0, 255]);
+        await VibrationPlus.vibrate(pattern: [0, 100, 50, 100], intensities: [0, 255, 0, 255]);
       } catch (e) {
-        await Vibration.vibrate(duration: 200);
+        await VibrationPlus.vibrate(duration: 200);
       }
     }
   }
@@ -77,9 +77,9 @@ class HapticService {
   Future<void> warning() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(pattern: [0, 75, 50, 75, 50, 75], intensities: [0, 180, 0, 180, 0, 180]);
+        await VibrationPlus.vibrate(pattern: [0, 75, 50, 75, 50, 75], intensities: [0, 180, 0, 180, 0, 180]);
       } catch (e) {
-        await Vibration.vibrate(duration: 150);
+        await VibrationPlus.vibrate(duration: 150);
       }
     }
   }
@@ -88,9 +88,9 @@ class HapticService {
   Future<void> notification() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(pattern: [0, 100, 100, 100], intensities: [0, 128, 0, 128]);
+        await VibrationPlus.vibrate(pattern: [0, 100, 100, 100], intensities: [0, 128, 0, 128]);
       } catch (e) {
-        await Vibration.vibrate(duration: 150);
+        await VibrationPlus.vibrate(duration: 150);
       }
     }
   }
@@ -99,7 +99,7 @@ class HapticService {
   Future<void> statusChange() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(duration: 40);
+        await VibrationPlus.vibrate(duration: 40);
       } catch (e) {
         // Ignore
       }
@@ -110,7 +110,7 @@ class HapticService {
   Future<void> signatureValidated() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(pattern: [0, 30, 30, 30, 30, 30], intensities: [0, 100, 0, 100, 0, 100]);
+        await VibrationPlus.vibrate(pattern: [0, 30, 30, 30, 30, 30], intensities: [0, 100, 0, 100, 0, 100]);
       } catch (e) {
         await success();
       }
@@ -121,7 +121,7 @@ class HapticService {
   Future<void> dragStart() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(duration: 20);
+        await VibrationPlus.vibrate(duration: 20);
       } catch (e) {
         // Ignore
       }
@@ -132,7 +132,7 @@ class HapticService {
   Future<void> dragDrop() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(pattern: [0, 40], intensities: [0, 200]);
+        await VibrationPlus.vibrate(pattern: [0, 40], intensities: [0, 200]);
       } catch (e) {
         await mediumTap();
       }
@@ -143,7 +143,7 @@ class HapticService {
   Future<void> refresh() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(duration: 60);
+        await VibrationPlus.vibrate(duration: 60);
       } catch (e) {
         // Ignore
       }
@@ -154,7 +154,7 @@ class HapticService {
   Future<void> primaryAction() async {
     if (await isVibrationAvailable) {
       try {
-        await Vibration.vibrate(duration: 50);
+        await VibrationPlus.vibrate(duration: 50);
       } catch (e) {
         // Ignore
       }
@@ -173,9 +173,9 @@ class HapticService {
         }
         pattern.removeLast();
         intensities.removeLast();
-        await Vibration.vibrate(pattern: pattern, intensities: intensities);
+        await VibrationPlus.vibrate(pattern: pattern, intensities: intensities);
       } catch (e) {
-        await Vibration.vibrate(duration: duration * count);
+        await VibrationPlus.vibrate(duration: duration * count);
       }
     }
   }
