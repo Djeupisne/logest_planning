@@ -66,5 +66,24 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- Permissions pour la géolocalisation -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Nous utilisons votre position pour afficher les missions sur la carte et fournir des itinéraires GPS pendant vos heures de travail.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Nous utilisons votre position pour suivre vos déplacements vers les missions pendant vos heures de travail, avec votre consentement.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Nous utilisons votre position pour le suivi des missions pendant vos heures de travail.</string>
+	
+	<!-- Permissions pour la caméra -->
+	<key>NSCameraUsageDescription</key>
+	<string>Nous utilisons la caméra pour prendre des photos des rapports de mission et des incidents.</string>
+	
+	<!-- Permissions pour la galerie photo -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Nous accédons à votre galerie pour sélectionner des photos pour les rapports de mission.</string>
+	
+	<!-- Permissions pour le microphone (si nécessaire pour les notes vocales) -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Nous utilisons le microphone pour enregistrer des notes vocales pour les rapports.</string>
 </dict>
 </plist>
