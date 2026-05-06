@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL avec PostGIS
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: logest_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: logest_planning
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/migrate.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - logest_network
+    restart: unless-stopped
+
+  # Backend API Node.js
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: logest_api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: logest_planning
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      ALLOWED_ORIGINS: http://localhost:8080,https://votre-domaine.com
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - logest_network
+    restart: unless-stopped
+    volumes:
+      - ./api/uploads:/app/uploads
+
+  # Adminer pour gérer la base de données (optionnel)
+  adminer:
+    image: adminer:latest
+    container_name: logest_adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    networks:
+      - logest_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  logest_network:
+    driver: bridge
