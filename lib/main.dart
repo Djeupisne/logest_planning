@@ -36,18 +36,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // Theme mode par défaut (s'adapte au système)
-  ThemeMode _themeMode = ThemeMode.system;
+  // Theme mode - Forcé en mode clair (fond blanc)
+  ThemeMode _themeMode = ThemeMode.light;
 
   void toggleTheme() {
     setState(() {
-      if (_themeMode == ThemeMode.light) {
-        _themeMode = ThemeMode.dark;
-      } else if (_themeMode == ThemeMode.dark) {
-        _themeMode = ThemeMode.system;
-      } else {
-        _themeMode = ThemeMode.light;
-      }
+      // Reste toujours en mode clair
+      _themeMode = ThemeMode.light;
     });
   }
 
@@ -63,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         themeMode: _themeMode,
         theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        // darkTheme supprimé car non utilisé (mode clair forcé)
         initialRoute: AppRoutes.home,
         onGenerateRoute: AppRoutes.generateRoute,
       ),
