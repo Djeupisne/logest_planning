@@ -45,7 +45,7 @@ dependencies:
   signature: ^5.4.0                 # Signature électronique avancée
   pdf: ^3.10.8                      # Export PDF signatures
   flutter_polyline_points: ^2.0.0   # Trajets GPS optimisés
-  flutter_drag_and_drop_lists: ^1.0.0 # Drag & Drop planning
+  reorderable_grid_view: ^2.2.8     # Drag & Drop planning (alternative)
   flutter_localizations:
     sdk: flutter                    # Support multi-langues
   animated_text_kit: ^4.2.2         # Textes animés
