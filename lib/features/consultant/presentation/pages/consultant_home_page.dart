@@ -1,7 +1,13 @@
-﻿import 'package:flutter/material.dart';
+﻿// lib/features/consultant/presentation/pages/consultant_home_page.dart
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_event.dart';
 
 class ConsultantHomePage extends StatefulWidget {
   const ConsultantHomePage({super.key});
@@ -12,6 +18,8 @@ class ConsultantHomePage extends StatefulWidget {
 
 class _ConsultantHomePageState extends State<ConsultantHomePage> {
   int _selectedIndex = 0;
+  File? _incidentImage;
+  final ImagePicker _imagePicker = ImagePicker();
 
   final List<Map<String, dynamic>> _missions = [
     {'id': 1, 'title': "Installation réseau", 'client': "Banque Sahélo-Saharienne", 'address': "Avenue Charles de Gaulle, N'Djamena", 'lat': 12.1348, 'lng': 15.0557, 'start': "09:00", 'end': "12:00", 'status': "en_route", 'contact': "M. Ibrahim", 'phone': "+235 66 12 34 56"},
@@ -226,9 +234,30 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
         ListTile(
           leading: const Icon(Icons.logout, color: Colors.red),
           title: const Text('Se déconnecter', style: TextStyle(color: Colors.red)),
-          onTap: () => _showSnack('Déconnexion...'),
+          onTap: () => _confirmLogout(),
         ),
       ]),
+    );
+  }
+
+  void _confirmLogout() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Déconnexion'),
+        content: const Text('Voulez-vous vraiment vous déconnecter ?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.read<AuthBloc>().add(LogoutRequested());
+              Navigator.pushReplacementNamed(context, '/login');
+            },
+            child: const Text('Se déconnecter', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -280,30 +309,47 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
   void _showIncidentDialog(Map<String, dynamic> m) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Signaler un incident'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder())),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              onPressed: () => _showSnack('Photo ajoutée'),
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Ajouter photo'),
+      builder: (_) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Signaler un incident'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder())),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: _incidentImage != null
+                        ? Image.file(_incidentImage!, height: 100, fit: BoxFit.cover)
+                        : Container(height: 100, color: Colors.grey[200], child: const Center(child: Text('Aucune photo'))),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: () async {
+                      final picked = await _imagePicker.pickImage(source: ImageSource.camera);
+                      if (picked != null) {
+                        setDialogState(() => _incidentImage = File(picked.path));
+                      }
+                    },
+                    icon: const Icon(Icons.camera_alt),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () { Navigator.pop(context); _incidentImage = null; }, child: const Text('Annuler')),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _incidentImage = null;
+                _showSnack('Incident signalé avec succès');
+              },
+              child: const Text('Envoyer'),
             ),
           ],
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _showSnack('Incident signalé avec succès');
-            },
-            child: const Text('Envoyer'),
-          ),
-        ],
       ),
     );
   }
