@@ -1,0 +1,53 @@
+name: logest_planning
+description: Application de planification des activités consultants LOGEST
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  cupertino_icons: ^1.0.8
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  go_router: ^14.2.0
+  dio: ^5.4.3
+  connectivity_plus: ^6.0.3
+  shared_preferences: ^2.2.3
+  flutter_secure_storage: ^9.2.2
+  path_provider: ^2.1.5
+  path: ^1.9.1
+  get_it: ^7.7.0
+  intl: ^0.19.0
+  image_picker: ^1.2.2
+  geolocator: ^12.0.0
+  permission_handler: ^11.3.1
+  formz: ^0.7.0
+  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+  dartz: ^0.10.1
+  fl_chart: ^1.2.0
+  table_calendar: ^3.1.3
+  url_launcher: ^6.3.2
+  flutter_signature_pad: ^3.0.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_map: ^8.3.0
+  latlong2: ^0.9.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.5.4
+  json_serializable: ^6.8.0
+  freezed: ^2.5.2
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
