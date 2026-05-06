@@ -128,11 +128,11 @@ class _CreateMissionDialogState extends State<CreateMissionDialog> {
                 Expanded(child: DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: 'Type', prefixIcon: Icon(Icons.category)),
                   value: _type,
-                  items: const [
-                    DropdownMenuItem(value: 'facturée', child: Row(children: [Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle)), SizedBox(width: 8), Text('Facturée')])),
-                    DropdownMenuItem(value: 'intercontrat', child: Row(children: [Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle)), SizedBox(width: 8), Text('Inter-contrat')])),
-                    DropdownMenuItem(value: 'formation', child: Row(children: [Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.yellow, shape: BoxShape.circle)), SizedBox(width: 8), Text('Formation')])),
-                    DropdownMenuItem(value: 'congé', child: Row(children: [Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle)), SizedBox(width: 8), Text('Congé')])),
+                  items: [
+                    const DropdownMenuItem(value: 'facturée', child: Row(children: [Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle)), SizedBox(width: 8), Text('Facturée')])),
+                    const DropdownMenuItem(value: 'intercontrat', child: Row(children: [Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle)), SizedBox(width: 8), Text('Inter-contrat')])),
+                    const DropdownMenuItem(value: 'formation', child: Row(children: [Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.yellow, shape: BoxShape.circle)), SizedBox(width: 8), Text('Formation')])),
+                    const DropdownMenuItem(value: 'congé', child: Row(children: [Container(width: 12, height: 12, decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle)), SizedBox(width: 8), Text('Congé')])),
                   ],
                   onChanged: (v) => setState(() => _type = v!),
                 )),
@@ -170,13 +170,13 @@ class _CreateMissionDialogState extends State<CreateMissionDialog> {
                 decoration: const InputDecoration(labelText: 'Consultant', prefixIcon: Icon(Icons.person_outline)),
                 value: _consultantId,
                 hint: const Text('Sélectionner un consultant'),
-                items: widget.consultants.where((c) => c['id'] > 0).map((c) => DropdownMenuItem(
-                  value: c['id'],
+                items: widget.consultants.where((c) => c['id'] != null).map((c) => DropdownMenuItem(
+                  value: c['id'] as int,
                   child: Row(children: [
-                    CircleAvatar(radius: 12, backgroundColor: _getConsultantColor(c['status']), child: Text(c['name'][0], style: const TextStyle(fontSize: 10, color: Colors.white))),
+                    CircleAvatar(radius: 12, backgroundColor: _getConsultantColor(c['status'] as String), child: Text((c['name'] as String)[0], style: const TextStyle(fontSize: 10, color: Colors.white))),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(c['name'], overflow: TextOverflow.ellipsis)),
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: _getStatusColor(c['status']).withOpacity(0.2), borderRadius: BorderRadius.circular(10)), child: Text(c['status'], style: TextStyle(fontSize: 10, color: _getStatusColor(c['status'])))),
+                    Expanded(child: Text(c['name'] as String, overflow: TextOverflow.ellipsis)),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: _getStatusColor(c['status'] as String).withOpacity(0.2), borderRadius: BorderRadius.circular(10)), child: Text(c['status'] as String, style: TextStyle(fontSize: 10, color: _getStatusColor(c['status'] as String)))),
                   ]),
                 )).toList(),
                 onChanged: (v) => setState(() => _consultantId = v),
@@ -238,7 +238,7 @@ class _CreateMissionDialogState extends State<CreateMissionDialog> {
         content: Row(children: [Icon(Icons.check_circle, color: Colors.white), SizedBox(width: 12), Text('Mission créée avec succès')]),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
       ));
     }
   }
