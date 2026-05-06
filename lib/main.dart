@@ -7,6 +7,7 @@ import 'package:logest_planning/core/services/connectivity_service.dart';
 import 'package:logest_planning/core/services/export_notification_service.dart';
 import 'package:logest_planning/injection.dart';
 import 'package:logest_planning/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:logest_planning/features/consultant/presentation/bloc/mission_bloc.dart';
 import 'package:logest_planning/features/auth/presentation/pages/login_page.dart';
 import 'package:logest_planning/routes/app_router.dart';
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<AuthBloc>()),
+        BlocProvider(create: (_) => getIt<MissionBloc>()),
       ],
       child: MaterialApp(
         title: 'Logest Planning',
