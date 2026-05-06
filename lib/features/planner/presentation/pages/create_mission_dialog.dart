@@ -175,8 +175,9 @@ class _CreateMissionDialogState extends State<CreateMissionDialog> {
                   child: Row(children: [
                     CircleAvatar(radius: 12, backgroundColor: _getConsultantColor(c['status'] as String), child: Text((c['name'] as String)[0], style: const TextStyle(fontSize: 10, color: Colors.white))),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(c['name'] as String, overflow: TextOverflow.ellipsis)),
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: _getStatusColor(c['status'] as String).withOpacity(0.2), borderRadius: BorderRadius.circular(10)), child: Text(c['status'] as String, style: TextStyle(fontSize: 10, color: _getStatusColor(c['status'] as String)))),
+                    Flexible(child: Text(c['name'] as String, overflow: TextOverflow.ellipsis)),
+                    const SizedBox(width: 8),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: _getStatusColor(c['status'] as String).withOpacity(0.2), borderRadius: BorderRadius.circular(10)), child: Text(c['status'] as String, style: TextStyle(fontSize: 9, color: _getStatusColor(c['status'] as String)))),
                   ]),
                 )).toList(),
                 onChanged: (v) => setState(() => _consultantId = v),
