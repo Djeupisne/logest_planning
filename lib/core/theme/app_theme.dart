@@ -134,7 +134,6 @@ class AppTheme {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         shadowColor: AppColors.primary.withOpacity(0.3),
-        elevation: 4,
       ),
     ),
     
@@ -200,14 +199,13 @@ class AppTheme {
     // Navigation Rail (pour tablette/web)
     navigationRailTheme: NavigationRailThemeData(
       backgroundColor: AppColors.surfaceLight,
-      selectedIndexColor: AppColors.primary,
       selectedIconTheme: const IconThemeData(size: 28),
       unselectedIconTheme: const IconThemeData(size: 24),
       labelType: NavigationRailLabelType.all,
     ),
     
     // Floating Action Button
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.white,
       elevation: 6,
@@ -333,7 +331,6 @@ class AppTheme {
         backgroundColor: AppColors.primaryAccent,
         foregroundColor: AppColors.backgroundDark,
         shadowColor: AppColors.primaryAccent.withOpacity(0.3),
-        elevation: 4,
       ),
     ),
     
@@ -399,14 +396,13 @@ class AppTheme {
     // Navigation Rail
     navigationRailTheme: NavigationRailThemeData(
       backgroundColor: AppColors.surfaceDark,
-      selectedIndexColor: AppColors.primaryAccent,
       selectedIconTheme: const IconThemeData(size: 28),
       unselectedIconTheme: const IconThemeData(size: 24),
       labelType: NavigationRailLabelType.all,
     ),
     
     // Floating Action Button
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: AppColors.primaryAccent,
       foregroundColor: AppColors.backgroundDark,
       elevation: 6,
