@@ -32,10 +32,8 @@ Thumbs.db
 .env.local
 *.env.*
 
-# Logs
+# Logs and coverage
 *.log
-
-# Coverage
 coverage/
 htmlcov/
 .coverage
