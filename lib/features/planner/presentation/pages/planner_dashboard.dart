@@ -140,14 +140,14 @@ class _PlannerDashboardState extends State<PlannerDashboard>
 
   Widget _getMissionsForDay(int consultantId, String day) {
     final dayNum = day.split(' ')[1];
-    final missions = _missions.where((m) => m.consultantId == consultantId && m.date.contains(dayNum)).toList();
+    final missions = _missions.where((m) => m['consultantId'] == consultantId && m['date'].toString().contains(dayNum)).toList();
     if (missions.isEmpty) return const SizedBox();
     return Padding(
       padding: const EdgeInsets.all(4),
       child: Container(
         padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(color: missions.first.color.withOpacity(0.3), borderRadius: BorderRadius.circular(8)),
-        child: Text(missions.first.title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+        decoration: BoxDecoration(color: missions.first['color'].withOpacity(0.3), borderRadius: BorderRadius.circular(8)),
+        child: Text(missions.first['title'] as String, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
       ),
     );
   }
@@ -185,13 +185,13 @@ class _PlannerDashboardState extends State<PlannerDashboard>
           margin: const EdgeInsets.only(bottom: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: ListTile(
-            leading: CircleAvatar(backgroundColor: c.color, child: Text(c.name[0], style: const TextStyle(color: Colors.white))),
-            title: Text(c.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('${c.specialty} • ${c.missions} missions'),
+            leading: CircleAvatar(backgroundColor: c['color'] as Color, child: Text((c['name'] as String)[0], style: const TextStyle(color: Colors.white))),
+            title: Text(c['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('${c['specialty']} • ${c['missions']} missions'),
             trailing: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(color: _getStatusColor(c.status), borderRadius: BorderRadius.circular(20)),
-              child: Text(c.status, style: const TextStyle(color: Colors.white, fontSize: 12)),
+              decoration: BoxDecoration(color: _getStatusColor(c['status'] as String), borderRadius: BorderRadius.circular(20)),
+              child: Text(c['status'] as String, style: const TextStyle(color: Colors.white, fontSize: 12)),
             ),
             onTap: () => _showConsultantDetail(c),
           ),
@@ -259,13 +259,4 @@ class _PlannerDashboardState extends State<PlannerDashboard>
       default: return Colors.grey;
     }
   }
-
-  Widget _legendItem(String label, Color color) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Container(width: 16, height: 16, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-      const SizedBox(width: 6),
-      Text(label, style: const TextStyle(fontSize: 13)),
-    ],
-  );
 }

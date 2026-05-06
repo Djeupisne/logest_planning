@@ -2,8 +2,6 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'widgets/signature_dialog.dart';
-import 'widgets/incident_report_dialog.dart';
 
 class ConsultantHomePage extends StatefulWidget {
   const ConsultantHomePage({super.key});
@@ -81,7 +79,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
     );
   }
 
-  Widget _buildMissionCard(Mission m) {
+  Widget _buildMissionCard(Map<String, dynamic> m) {
     final color = _statusColor(m['status'] as String);
     return Card(
       elevation: 3,
@@ -98,7 +96,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(m['client'], style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                Text(m.title, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+                Text(m['title'] as String, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
               ])),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -114,7 +112,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
               const SizedBox(width: 12),
               Icon(Icons.location_on, size: 15, color: Colors.grey[600]),
               const SizedBox(width: 4),
-              Expanded(child: Text(m.address, style: TextStyle(color: Colors.grey[600]), maxLines: 1, overflow: TextOverflow.ellipsis)),
+              Expanded(child: Text(m['address'] as String, style: TextStyle(color: Colors.grey[600]), maxLines: 1, overflow: TextOverflow.ellipsis)),
             ]),
             const SizedBox(height: 12),
             Row(children: [
@@ -282,14 +280,64 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
   void _showIncidentDialog(Map<String, dynamic> m) {
     showDialog(
       context: context,
-      builder: (_) => IncidentReportDialog(missionId: m['id']),
+      builder: (_) => AlertDialog(
+        title: const Text('Signaler un incident'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder)),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () => _showSnack('Photo ajoutée'),
+              icon: const Icon(Icons.camera_alt),
+              label: const Text('Ajouter photo'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _showSnack('Incident signalé avec succès');
+            },
+            child: const Text('Envoyer'),
+          ),
+        ],
+      ),
     );
   }
 
   void _showReportDialog(Map<String, dynamic> m) {
     showDialog(
       context: context,
-      builder: (_) => SignatureDialog(missionId: m['id']),
+      builder: (_) => AlertDialog(
+        title: const Text('Rapport de mission'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(decoration: const InputDecoration(labelText: 'Commentaires', border: OutlineInputBorder), maxLines: 3),
+            const SizedBox(height: 16),
+            const Text('Signature du client:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Container(
+              height: 150,
+              decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(8)),
+              child: Center(child: Text('Zone de signature (à implémenter)', style: TextStyle(color: Colors.grey[400]))),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _showSnack('Rapport enregistré avec succès');
+            },
+            child: const Text('Valider'),
+          ),
+        ],
+      ),
     );
   }
 
