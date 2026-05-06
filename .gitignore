@@ -1,41 +1,36 @@
 ```
 # Build outputs
-/build/
-/bin/
-/gen/
-/intermediates/
-/outputs/
+build/
+dist/
+*.apk
+*.aab
 
-# Gradle
+# Dependencies
 .gradle/
-.gradle-wrapper/
+node_modules/
+vendor/
 
-# Local configuration file (sdk path, etc)
-local.properties
-
-# Android Studio
-*.iml
-*.ipr
-*.iws
+# IDE files
 .idea/
+.vscode/
+*.iml
+*.iws
+*.swp
+*.swo
 
-# Log Files
+# Logs
 *.log
 
-# Keystore
-*.keystore
+# Environment
+.env
+.env.local
+*.env.*
 
-# Generated Javadoc
-doc/
+# OS generated files
+.DS_Store
+Thumbs.db
 
-# Debug & Release Folders
-debug/
-release/
-
-# Coverage reports
-coverage/
-*.ec
-
-# Unit test reports
-test-results/
+# Temporary files
+*.tmp
+*.temp
 ```

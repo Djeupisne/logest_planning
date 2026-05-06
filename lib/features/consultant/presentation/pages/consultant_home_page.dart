@@ -698,20 +698,28 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
   }
 
   Future<void> _openMap(double lat, double lng) async {
-    // URL optimisée pour Android avec mode de navigation
-    final uri = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving');
+    // Essayer d'abord avec le schéma geo: (plus fiable sur Android)
+    final geoUri = Uri.parse('geo:$lat,$lng?q=$lat,$lng');
+    final httpsUri = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving');
     
     try {
-      if (await canLaunchUrl(uri)) {
+      // Vérifier si Google Maps est installé
+      if (await canLaunchUrl(geoUri)) {
         await launchUrl(
-          uri,
-          mode: LaunchMode.externalApplication, // Ouvre dans l'application Google Maps
+          geoUri,
+          mode: LaunchMode.externalApplication,
+        );
+      } else if (await canLaunchUrl(httpsUri)) {
+        // Fallback vers HTTPS
+        await launchUrl(
+          httpsUri,
+          mode: LaunchMode.externalApplication,
         );
       } else {
-        _showSnack('Impossible d\'ouvrir la carte', isError: true);
+        _showSnack('Google Maps n\'est pas installé', isError: true);
       }
     } catch (e) {
-      _showSnack('Erreur lors de l\'ouverture de la carte: ${e.toString()}', isError: true);
+      _showSnack('Erreur: Impossible d\'ouvrir la carte', isError: true);
     }
   }
 
@@ -752,8 +760,9 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Incidents signalés (${_reportedIncidents.length})',
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange[800]),
+                'Incidents (${_reportedIncidents.length})',
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange[800], fontSize: 16),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -768,12 +777,13 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
                     const SizedBox(height: 16),
                     Text(
                       'Aucun incident signalé',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Tous les incidents seront affichés ici',
                       style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 )
@@ -789,11 +799,13 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.orange[100],
-                          child: Icon(Icons.report_problem, color: Colors.orange[700]),
+                          child: Icon(Icons.report_problem, color: Colors.orange[700], size: 20),
                         ),
                         title: Text(
                           '${inc['client']}',
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -801,19 +813,25 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
                             const SizedBox(height: 4),
                             Text(
                               inc['title'],
-                              style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
                             Row(
                               children: [
                                 Icon(Icons.access_time, size: 12, color: Colors.grey[500]),
                                 const SizedBox(width: 4),
-                                Text(
-                                  _formatDate(inc['date'] as DateTime),
-                                  style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                                Flexible(
+                                  child: Text(
+                                    _formatDate(inc['date'] as DateTime),
+                                    style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                                 if (inc['hasPhoto'] == true) ...[
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: 6),
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
@@ -821,12 +839,13 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(Icons.photo, size: 10, color: Colors.blue[700]),
                                         const SizedBox(width: 2),
                                         Text(
                                           'Photo',
-                                          style: TextStyle(color: Colors.blue[700], fontSize: 10),
+                                          style: TextStyle(color: Colors.blue[700], fontSize: 9, fontWeight: FontWeight.w500),
                                         ),
                                       ],
                                     ),
@@ -848,7 +867,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
             onPressed: () => Navigator.pop(context),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text('Fermer', style: TextStyle(color: Colors.grey[700])),
+              child: Text('Fermer', style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500)),
             ),
           ),
         ],
