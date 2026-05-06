@@ -143,14 +143,18 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
   Widget _actionBtn(IconData icon, String label, VoidCallback onTap, Color color) {
     return Expanded(
       child: ElevatedButton.icon(
-        onPressed: onTap,
+        onPressed: () {
+          // Feedback haptique et visuel avant l'action
+          onTap();
+        },
         icon: Icon(icon, size: 16),
         label: Text(label, style: const TextStyle(fontSize: 12)),
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          elevation: 2,
         ),
       ),
     );
@@ -220,30 +224,204 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
 
   // ── PROFIL ────────────────────────────────────────────────────────────────
   Widget _buildProfileTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          // En-tête du profil avec dégradé
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 32),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue[700]!, Colors.blue[500]!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.withOpacity(0.3),
+                  blurRadius: 15,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 3),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, size: 50, color: Colors.blue),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Jean Dupont',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    'Consultant Senior',
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildStatItem('42', 'Missions'),
+                    Container(width: 1, height: 30, color: Colors.white30),
+                    _buildStatItem('98%', 'Ponctualité'),
+                    Container(width: 1, height: 30, color: Colors.white30),
+                    _buildStatItem('4.8/5', 'Satisfaction'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          
+          // Section Informations de contact
+          _buildSectionTitle('Informations de contact'),
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Column(
+              children: [
+                _buildInfoTile(Icons.email, 'consultant@logest.com', 'Email'),
+                const Divider(height: 1, indent: 60),
+                _buildInfoTile(Icons.phone, '+235 66 12 34 56', 'Téléphone'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          
+          // Section Incidents
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.orange[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(Icons.bug_report, color: Colors.orange[700], size: 24),
+              ),
+              title: Text(
+                'Incidents signalés',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              subtitle: Text(
+                '${_reportedIncidents.length} incident${_reportedIncidents.length > 1 ? 's' : ''}',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              trailing: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.chevron_right, color: Colors.grey[700]),
+              ),
+              onTap: () => _showIncidentsList(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          
+          // Bouton de déconnexion
+          Container(
+            width: double.infinity,
+            height: 56,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                colors: [Colors.red[600]!, Colors.red[400]!],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.red.withOpacity(0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: ElevatedButton.icon(
+              onPressed: _confirmLogout,
+              icon: const Icon(Icons.logout, size: 24),
+              label: const Text(
+                'Se déconnecter',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                foregroundColor: Colors.white,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(String value, String label) {
     return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(children: [
-        const CircleAvatar(radius: 48, child: Icon(Icons.person, size: 48)),
-        const SizedBox(height: 16),
-        const Text('Jean Dupont', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        Text('Consultant', style: TextStyle(color: Colors.grey[600])),
-        const SizedBox(height: 8),
-        Text('consultant@logest.com', style: TextStyle(color: Colors.grey[600])),
-        const SizedBox(height: 32),
-        ListTile(leading: const Icon(Icons.phone), title: const Text('+235 66 12 34 56')),
-        const Divider(),
-        ListTile(
-          leading: const Icon(Icons.bug_report, color: Colors.orange),
-          title: Text('Incidents signalés (${_reportedIncidents.length})', style: const TextStyle(fontWeight: FontWeight.bold)),
-          onTap: () => _showIncidentsList(),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.white70)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 12),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+      ),
+    );
+  }
+
+  Widget _buildInfoTile(IconData icon, String value, String label) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.blue[50],
+          borderRadius: BorderRadius.circular(10),
         ),
-        const Divider(),
-        ListTile(
-          leading: const Icon(Icons.logout, color: Colors.red),
-          title: const Text('Se déconnecter', style: TextStyle(color: Colors.red)),
-          onTap: () => _confirmLogout(),
-        ),
-      ]),
+        child: Icon(icon, color: Colors.blue[700], size: 22),
+      ),
+      title: Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+      subtitle: Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
     );
   }
 
@@ -318,51 +496,132 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
       context: context,
       builder: (_) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Signaler un incident'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+          title: Row(
             children: [
-              TextField(decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder())),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: _incidentImage != null
-                        ? Image.file(_incidentImage!, height: 100, fit: BoxFit.cover)
-                        : Container(height: 100, color: Colors.grey[200], child: const Center(child: Text('Aucune photo'))),
-                  ),
-                  const SizedBox(width: 8),
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          final picked = await _imagePicker.pickImage(source: ImageSource.camera);
-                          if (picked != null) {
-                            setDialogState(() => _incidentImage = File(picked.path));
-                          }
-                        },
-                        icon: const Icon(Icons.camera_alt),
-                        tooltip: 'Prendre une photo',
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          final picked = await _imagePicker.pickImage(source: ImageSource.gallery);
-                          if (picked != null) {
-                            setDialogState(() => _incidentImage = File(picked.path));
-                          }
-                        },
-                        icon: const Icon(Icons.photo_library),
-                        tooltip: 'Choisir depuis la galerie',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              Icon(Icons.report_problem, color: Colors.orange[700]),
+              const SizedBox(width: 12),
+              Text('Signaler un incident', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange[800])),
             ],
           ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Mission: ${m['client']} - ${m['title']}',
+                  style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey[700]),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Description de l\'incident',
+                    hintText: 'Décrivez le problème rencontré...',
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.grey[50],
+                  ),
+                  maxLines: 4,
+                ),
+                const SizedBox(height: 16),
+                Text('Photo (optionnel)', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[700])),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _incidentImage != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.file(
+                                _incidentImage!,
+                                height: 120,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Container(
+                              height: 120,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey[300]!),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add_photo_alternate_outlined, size: 40, color: Colors.grey[400]),
+                                  const SizedBox(height: 4),
+                                  Text('Aucune photo', style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                                ],
+                              ),
+                            ),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                            onPressed: () async {
+                              final picked = await _imagePicker.pickImage(source: ImageSource.camera);
+                              if (picked != null) {
+                                setDialogState(() => _incidentImage = File(picked.path));
+                              }
+                            },
+                            icon: Icon(Icons.camera_alt, color: Colors.blue[700]),
+                            tooltip: 'Prendre une photo',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.green[50],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                            onPressed: () async {
+                              final picked = await _imagePicker.pickImage(source: ImageSource.gallery);
+                              if (picked != null) {
+                                setDialogState(() => _incidentImage = File(picked.path));
+                              }
+                            },
+                            icon: Icon(Icons.photo_library, color: Colors.green[700]),
+                            tooltip: 'Choisir depuis la galerie',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                if (_incidentImage != null) ...[
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () {
+                        setDialogState(() => _incidentImage = null);
+                      },
+                      icon: const Icon(Icons.delete_outline, size: 16),
+                      label: const Text('Supprimer', style: TextStyle(fontSize: 12)),
+                      style: TextButton.styleFrom(foregroundColor: Colors.red),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
           actions: [
-            TextButton(onPressed: () { Navigator.pop(context); _incidentImage = null; }, child: const Text('Annuler')),
-            ElevatedButton(
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _incidentImage = null;
+              },
+              child: const Text('Annuler'),
+            ),
+            ElevatedButton.icon(
               onPressed: () {
                 final description = 'Incident sur ${m['client']} - ${m['title']}';
                 _reportedIncidents.add({
@@ -378,7 +637,12 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
                 setState(() {});
                 _showSnack('Incident signalé avec succès');
               },
-              child: const Text('Envoyer'),
+              icon: const Icon(Icons.send),
+              label: const Text('Envoyer'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange[600],
+                foregroundColor: Colors.white,
+              ),
             ),
           ],
         ),
@@ -434,44 +698,170 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
   }
 
   Future<void> _openMap(double lat, double lng) async {
-    final uri = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng');
-    if (await canLaunchUrl(uri)) await launchUrl(uri);
+    // URL optimisée pour Android avec mode de navigation
+    final uri = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving');
+    
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication, // Ouvre dans l'application Google Maps
+        );
+      } else {
+        _showSnack('Impossible d\'ouvrir la carte', isError: true);
+      }
+    } catch (e) {
+      _showSnack('Erreur lors de l\'ouverture de la carte: ${e.toString()}', isError: true);
+    }
   }
 
-  void _showSnack(String msg) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  void _showSnack(String msg, {bool isError = false}) =>
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(
+                isError ? Icons.error_outline : Icons.check_circle_outline,
+                color: Colors.white,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Text(msg, style: const TextStyle(fontSize: 14))),
+            ],
+          ),
+          backgroundColor: isError ? Colors.red[700] : const Color(0xFF0F9D58),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          margin: const EdgeInsets.all(16),
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(
+            label: 'OK',
+            textColor: Colors.white,
+            onPressed: () {},
+          ),
+        ),
+      );
 
   void _showIncidentsList() {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Incidents signalés'),
+        title: Row(
+          children: [
+            Icon(Icons.bug_report, color: Colors.orange[700]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Incidents signalés (${_reportedIncidents.length})',
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange[800]),
+              ),
+            ),
+          ],
+        ),
         content: SizedBox(
           width: double.maxFinite,
           child: _reportedIncidents.isEmpty
-              ? const Center(child: Text('Aucun incident signalé'))
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.check_circle_outline, size: 64, color: Colors.green[300]),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Aucun incident signalé',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Tous les incidents seront affichés ici',
+                      style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                    ),
+                  ],
+                )
               : ListView.builder(
                   shrinkWrap: true,
                   itemCount: _reportedIncidents.length,
                   itemBuilder: (_, i) {
                     final inc = _reportedIncidents[i];
                     return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
+                      elevation: 2,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       child: ListTile(
-                        leading: Icon(Icons.report_problem, color: Colors.orange),
-                        title: Text('${inc['client']} - ${inc['title']}'),
-                        subtitle: Text('${inc['date'].toString().substring(0, 16)}${inc['hasPhoto'] ? ' 📷' : ''}'),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.orange[100],
+                          child: Icon(Icons.report_problem, color: Colors.orange[700]),
+                        ),
+                        title: Text(
+                          '${inc['client']}',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(
+                              inc['title'],
+                              style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(Icons.access_time, size: 12, color: Colors.grey[500]),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _formatDate(inc['date'] as DateTime),
+                                  style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                                ),
+                                if (inc['hasPhoto'] == true) ...[
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[100],
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.photo, size: 10, color: Colors.blue[700]),
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          'Photo',
+                                          style: TextStyle(color: Colors.blue[700], fontSize: 10),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
                         isThreeLine: true,
+                        trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
                       ),
                     );
                   },
                 ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text('Fermer', style: TextStyle(color: Colors.grey[700])),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    const months = [
+      'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin',
+      'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'
+    ];
+    return '${date.day} ${months[date.month - 1]} ${date.year} à ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
 
   String _statusLabel(String s) => {'en_route': 'En route', 'arrived': 'Arrivé', 'in_progress': 'En intervention', 'planned': 'Planifié', 'completed': 'Terminé'}[s] ?? s;
