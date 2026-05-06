@@ -285,7 +285,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder)),
+            TextField(decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder())),
             const SizedBox(height: 12),
             ElevatedButton.icon(
               onPressed: () => _showSnack('Photo ajoutée'),
@@ -316,7 +316,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(decoration: const InputDecoration(labelText: 'Commentaires', border: OutlineInputBorder), maxLines: 3),
+            TextField(decoration: const InputDecoration(labelText: 'Commentaires', border: OutlineInputBorder()), maxLines: 3),
             const SizedBox(height: 16),
             const Text('Signature du client:', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),

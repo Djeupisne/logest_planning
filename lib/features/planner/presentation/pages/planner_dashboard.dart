@@ -111,7 +111,7 @@ class _PlannerDashboardState extends State<PlannerDashboard>
                 ..._consultants.map((c) => Container(
                   height: 80,
                   alignment: Alignment.centerLeft,
-                  child: Text(c.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  child: Text(c['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 )),
               ]),
             ),
@@ -126,7 +126,7 @@ class _PlannerDashboardState extends State<PlannerDashboard>
                 ..._consultants.map((c) => Container(
                   height: 80,
                   decoration: BoxDecoration(border: Border.all(color: Colors.grey[200]!)),
-                  child: _getMissionsForDay(c.id, day),
+                  child: _getMissionsForDay(c['id'], day),
                 )),
               ]),
             )).toList()),
