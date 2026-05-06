@@ -51,7 +51,7 @@ dependencies:
   animated_text_kit: ^4.2.2         # Textes animés
   percent_indicator: ^4.2.3         # Indicateurs circulaires
   flutter_staggered_animations: ^1.1.1 # Animations en cascade
-  syncfusion_flutter_charts: ^27.1.50 # Dashboard direction
+  syncfusion_flutter_charts: ^33.2.5 # Mis à jour pour compatibilité intl 0.20.x
   timeline_tile: ^2.0.0             # Timeline missions
   badges: ^3.1.2                    # Badges notifications
   introduction_screen: ^3.1.14      # Onboarding moderne
