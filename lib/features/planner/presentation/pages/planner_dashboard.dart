@@ -1,5 +1,7 @@
 ﻿// lib/features/planner/presentation/pages/planner_dashboard.dart
 import 'package:flutter/material.dart';
+import 'create_mission_dialog.dart';
+import 'consultant_map_dialog.dart';
 
 class PlannerDashboard extends StatefulWidget {
   const PlannerDashboard({super.key});
@@ -12,20 +14,20 @@ class _PlannerDashboardState extends State<PlannerDashboard>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<Consultant> _consultants = [
-    Consultant(id: 1, name: 'Jean Dupont', specialty: 'Réseau', status: 'disponible', color: Colors.green, missions: 3),
-    Consultant(id: 2, name: "Marie N'Djamena", specialty: 'Développement', status: 'en_mission', color: Colors.orange, missions: 2),
-    Consultant(id: 3, name: 'Ali Mahamat', specialty: 'Maintenance', status: 'disponible', color: Colors.blue, missions: 1),
-    Consultant(id: 4, name: 'Fatima Hassan', specialty: 'Formation', status: 'congé', color: Colors.grey, missions: 0),
-    Consultant(id: 5, name: 'Oumar Abakar', specialty: 'Consulting', status: 'disponible', color: Colors.purple, missions: 2),
+  final List<Map<String, dynamic>> _consultants = [
+    {'id': 1, 'name': 'Jean Dupont', 'specialty': 'Réseau', 'status': 'disponible', 'color': Colors.green, 'missions': 3, 'lat': 12.1348, 'lng': 15.0557},
+    {'id': 2, 'name': "Marie N'Djamena", 'specialty': 'Développement', 'status': 'en_mission', 'color': Colors.orange, 'missions': 2, 'lat': 12.1200, 'lng': 15.0500},
+    {'id': 3, 'name': 'Ali Mahamat', 'specialty': 'Maintenance', 'status': 'disponible', 'color': Colors.blue, 'missions': 1, 'lat': 12.1100, 'lng': 15.0400},
+    {'id': 4, 'name': 'Fatima Hassan', 'specialty': 'Formation', 'status': 'congé', 'color': Colors.grey, 'missions': 0, 'lat': 12.1250, 'lng': 15.0650},
+    {'id': 5, 'name': 'Oumar Abakar', 'specialty': 'Consulting', 'status': 'disponible', 'color': Colors.purple, 'missions': 2, 'lat': 12.1300, 'lng': 15.0600},
   ];
 
-  final List<PlanningMission> _missions = [
-    PlanningMission(title: 'Installation réseau', client: 'Banque Sahélo-Saharienne', consultantId: 1, date: '2024-05-06', time: '09:00-12:00', type: 'facturée', color: Colors.green),
-    PlanningMission(title: 'Formation Excel', client: 'Ministère Finances', consultantId: 2, date: '2024-05-06', time: '14:00-17:00', type: 'formation', color: Colors.yellow),
-    PlanningMission(title: 'Maintenance serveur', client: 'Université', consultantId: 3, date: '2024-05-07', time: '10:00-13:00', type: 'facturée', color: Colors.green),
-    PlanningMission(title: 'Congés', client: '-', consultantId: 4, date: '2024-05-08', time: 'Journée', type: 'congé', color: Colors.blue),
-    PlanningMission(title: 'Inter-contrat', client: '-', consultantId: 5, date: '2024-05-06', time: 'Journée', type: 'intercontrat', color: Colors.grey),
+  final List<Map<String, dynamic>> _missions = [
+    {'title': 'Installation réseau', 'client': 'Banque Sahélo-Saharienne', 'consultantId': 1, 'date': '2024-05-06', 'time': '09:00-12:00', 'type': 'facturée', 'color': Colors.green},
+    {'title': 'Formation Excel', 'client': 'Ministère Finances', 'consultantId': 2, 'date': '2024-05-06', 'time': '14:00-17:00', 'type': 'formation', 'color': Colors.yellow},
+    {'title': 'Maintenance serveur', 'client': 'Université', 'consultantId': 3, 'date': '2024-05-07', 'time': '10:00-13:00', 'type': 'facturée', 'color': Colors.green},
+    {'title': 'Congés', 'client': '-', 'consultantId': 4, 'date': '2024-05-08', 'time': 'Journée', 'type': 'congé', 'color': Colors.blue},
+    {'title': 'Inter-contrat', 'client': '-', 'consultantId': 5, 'date': '2024-05-06', 'time': 'Journée', 'type': 'intercontrat', 'color': Colors.grey},
   ];
 
   @override
@@ -44,12 +46,24 @@ class _PlannerDashboardState extends State<PlannerDashboard>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Text('Planificateur Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
         actions: [
-          IconButton(icon: const Icon(Icons.map), onPressed: () => _showSuccess('Carte des consultants')),
-          IconButton(icon: const Icon(Icons.add), onPressed: () => _showCreateMissionDialog()),
+          IconButton(
+            icon: const Icon(Icons.map),
+            tooltip: 'Carte des consultants',
+            onPressed: () => _showMapDialog(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Créer une mission',
+            onPressed: () => _showCreateMissionDialog(),
+          ),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -65,6 +79,20 @@ class _PlannerDashboardState extends State<PlannerDashboard>
           _buildConsultantsList(),
         ],
       ),
+    );
+  }
+
+  void _showMapDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => ConsultantMapDialog(consultants: _consultants),
+    );
+  }
+
+  void _showCreateMissionDialog({int? consultantId}) {
+    showDialog(
+      context: context,
+      builder: (_) => CreateMissionDialog(consultants: _consultants),
     );
   }
 
@@ -172,7 +200,7 @@ class _PlannerDashboardState extends State<PlannerDashboard>
     );
   }
 
-  void _showConsultantDetail(Consultant c) {
+  void _showConsultantDetail(Map<String, dynamic> c) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -186,22 +214,27 @@ class _PlannerDashboardState extends State<PlannerDashboard>
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Container(width: 50, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
             const SizedBox(height: 16),
-            CircleAvatar(radius: 40, backgroundColor: c.color, child: Text(c.name[0], style: const TextStyle(fontSize: 30, color: Colors.white))),
+            CircleAvatar(radius: 40, backgroundColor: c['color'], child: Text(c['name'][0], style: const TextStyle(fontSize: 30, color: Colors.white))),
             const SizedBox(height: 12),
-            Text(c.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            Text(c.specialty, style: TextStyle(color: Colors.grey[600])),
+            Text(c['name'], style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(c['specialty'], style: TextStyle(color: Colors.grey[600])),
             const Divider(height: 28),
-            _infoRow('Statut', c.status),
-            _infoRow('Missions', c.missions.toString()),
-            _infoRow('Disponibilité', c.status == 'disponible' ? 'Immédiate' : 'À vérifier'),
+            _infoRow('Statut', c['status']),
+            _infoRow('Missions', c['missions'].toString()),
+            _infoRow('Disponibilité', c['status'] == 'disponible' ? 'Immédiate' : 'À vérifier'),
             const SizedBox(height: 20),
             Row(children: [
-              Expanded(child: ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Fermer'))),
+              Expanded(child: OutlinedButton.icon(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.close),
+                label: const Text('Fermer'),
+              )),
               const SizedBox(width: 12),
-              Expanded(child: ElevatedButton(
-                onPressed: () { Navigator.pop(context); _showCreateMissionDialog(consultantId: c.id); },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text('Assigner'),
+              Expanded(child: ElevatedButton.icon(
+                onPressed: () { Navigator.pop(context); _showCreateMissionDialog(consultantId: c['id']); },
+                icon: const Icon(Icons.add_task),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+                label: const Text('Assigner'),
               )),
             ]),
           ]),
@@ -209,29 +242,30 @@ class _PlannerDashboardState extends State<PlannerDashboard>
       ),
     );
   }
+  
   Widget _infoRow(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
+    padding: const EdgeInsets.symmetric(vertical: 6),
     child: Row(children: [
-      SizedBox(width: 100, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold))),
-      Text(value),
+      SizedBox(width: 100, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
+      Expanded(child: Text(value, style: const TextStyle(fontSize: 14))),
     ]),
   );
 
-  void _showCreateMissionDialog({int? consultantId}) => _showSuccess('Formulaire de création de mission');
-  void _showSuccess(String msg) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-  Color _getStatusColor(String s) => {'disponible': Colors.green, 'en_mission': Colors.orange, 'congé': Colors.blue}[s] ?? Colors.grey;
-}
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'disponible': return Colors.green;
+      case 'en_mission': return Colors.orange;
+      case 'congé': return Colors.blue;
+      default: return Colors.grey;
+    }
+  }
 
-class Consultant {
-  final int id, missions;
-  final String name, specialty, status;
-  final Color color;
-  Consultant({required this.id, required this.name, required this.specialty, required this.status, required this.color, required this.missions});
-}
-
-class PlanningMission {
-  final String title, client, date, time, type;
-  final int consultantId;
-  final Color color;
-  PlanningMission({required this.title, required this.client, required this.consultantId, required this.date, required this.time, required this.type, required this.color});
+  Widget _legendItem(String label, Color color) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(width: 16, height: 16, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+      const SizedBox(width: 6),
+      Text(label, style: const TextStyle(fontSize: 13)),
+    ],
+  );
 }

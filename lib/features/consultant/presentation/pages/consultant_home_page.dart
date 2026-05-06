@@ -2,6 +2,8 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'widgets/signature_dialog.dart';
+import 'widgets/incident_report_dialog.dart';
 
 class ConsultantHomePage extends StatefulWidget {
   const ConsultantHomePage({super.key});
@@ -13,22 +15,29 @@ class ConsultantHomePage extends StatefulWidget {
 class _ConsultantHomePageState extends State<ConsultantHomePage> {
   int _selectedIndex = 0;
 
-  final List<Mission> _missions = [
-    Mission(id: 1, title: "Installation réseau", client: "Banque Sahélo-Saharienne", address: "Avenue Charles de Gaulle, N'Djamena", lat: 12.1348, lng: 15.0557, start: "09:00", end: "12:00", status: "en_route", contact: "M. Ibrahim", phone: "+235 66 12 34 56"),
-    Mission(id: 2, title: "Formation utilisateurs", client: "Ministère des Finances", address: "Quartier Diguel, N'Djamena", lat: 12.1200, lng: 15.0500, start: "14:00", end: "17:00", status: "in_progress", contact: "Mme. Fatima", phone: "+235 66 23 45 67"),
-    Mission(id: 3, title: "Maintenance serveur", client: "Université de N'Djamena", address: "Quartier Moursal, N'Djamena", lat: 12.1100, lng: 15.0400, start: "10:00", end: "13:00", status: "arrived", contact: "Pr. Ahmed", phone: "+235 66 34 56 78"),
-    Mission(id: 4, title: "Consultation IT", client: "Société Tchadienne", address: "Quartier Chagoua, N'Djamena", lat: 12.1250, lng: 15.0650, start: "15:00", end: "18:00", status: "planned", contact: "M. Oumar", phone: "+235 66 45 67 89"),
+  final List<Map<String, dynamic>> _missions = [
+    {'id': 1, 'title': "Installation réseau", 'client': "Banque Sahélo-Saharienne", 'address': "Avenue Charles de Gaulle, N'Djamena", 'lat': 12.1348, 'lng': 15.0557, 'start': "09:00", 'end': "12:00", 'status': "en_route", 'contact': "M. Ibrahim", 'phone': "+235 66 12 34 56"},
+    {'id': 2, 'title': "Formation utilisateurs", 'client': "Ministère des Finances", 'address': "Quartier Diguel, N'Djamena", 'lat': 12.1200, 'lng': 15.0500, 'start': "14:00", 'end': "17:00", 'status': "in_progress", 'contact': "Mme. Fatima", 'phone': "+235 66 23 45 67"},
+    {'id': 3, 'title': "Maintenance serveur", 'client': "Université de N'Djamena", 'address': "Quartier Moursal, N'Djamena", 'lat': 12.1100, 'lng': 15.0400, 'start': "10:00", 'end': "13:00", 'status': "arrived", 'contact': "Pr. Ahmed", 'phone': "+235 66 34 56 78"},
+    {'id': 4, 'title': "Consultation IT", 'client': "Société Tchadienne", 'address': "Quartier Chagoua, N'Djamena", 'lat': 12.1250, 'lng': 15.0650, 'start': "15:00", 'end': "18:00", 'status': "planned", 'contact': "M. Oumar", 'phone': "+235 66 45 67 89"},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: _selectedIndex != 0 
+            ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => setState(() => _selectedIndex = 0))
+            : null,
         title: const Text('LOGEST Planning', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
         actions: [
-          IconButton(icon: const Icon(Icons.notifications), onPressed: () => _showSnack('Aucune nouvelle notification')),
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            tooltip: 'Notifications',
+            onPressed: () => _showSnack('Aucune nouvelle notification'),
+          ),
         ],
       ),
       body: IndexedStack(
@@ -73,7 +82,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
   }
 
   Widget _buildMissionCard(Mission m) {
-    final color = _statusColor(m.status);
+    final color = _statusColor(m['status'] as String);
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 12),
@@ -88,20 +97,20 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
               CircleAvatar(backgroundColor: color.withOpacity(0.2), child: Icon(Icons.work, color: color)),
               const SizedBox(width: 12),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(m.client, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                Text(m['client'], style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                 Text(m.title, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
               ])),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
-                child: Text(_statusLabel(m.status), style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text(_statusLabel(m['status'] as String), style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold)),
               ),
             ]),
             const SizedBox(height: 10),
             Row(children: [
               Icon(Icons.access_time, size: 15, color: Colors.grey[600]),
               const SizedBox(width: 4),
-              Text('${m.start} - ${m.end}', style: TextStyle(color: Colors.grey[600])),
+              Text('${m['start']} - ${m['end']}', style: TextStyle(color: Colors.grey[600])),
               const SizedBox(width: 12),
               Icon(Icons.location_on, size: 15, color: Colors.grey[600]),
               const SizedBox(width: 4),
@@ -109,12 +118,12 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
             ]),
             const SizedBox(height: 12),
             Row(children: [
-              _actionBtn(Icons.directions, 'Itinéraire', () => _openMap(m.lat, m.lng), Colors.green),
+              _actionBtn(Icons.directions, 'Itinéraire', () => _openMap(m['lat'] as double, m['lng'] as double), Colors.green),
               const SizedBox(width: 8),
               _actionBtn(Icons.report_problem, 'Incident', () => _showIncidentDialog(m), Colors.orange),
               const SizedBox(width: 8),
-              if (m.status != 'completed')
-                _actionBtn(Icons.check_circle, _nextLabel(m.status), () => _updateStatus(m), Colors.blue)
+              if (m['status'] as String != 'completed')
+                _actionBtn(Icons.check_circle, _nextLabel(m['status'] as String), () => _updateStatus(m), Colors.blue)
               else
                 _actionBtn(Icons.edit_note, 'Rapport', () => _showReportDialog(m), Colors.purple),
             ]),
@@ -154,14 +163,14 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
         ),
         MarkerLayer(
           markers: _missions.map((m) => Marker(
-            point: LatLng(m.lat, m.lng),
+            point: LatLng(m['lat'] as double, m['lng'] as double),
             width: 40,
             height: 40,
             child: GestureDetector(
               onTap: () => _showMissionDetail(m),
               child: Tooltip(
-                message: '${m.client}\n${m.start} - ${m.end}',
-                child: Icon(Icons.location_pin, color: _statusColor(m.status), size: 40),
+                message: '${m['client']}\n${m['start']} - ${m['end']}',
+                child: Icon(Icons.location_pin, color: _statusColor(m['status'] as String), size: 40),
               ),
             ),
           )).toList(),
@@ -225,8 +234,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
     );
   }
 
-  // ── DIALOGS ───────────────────────────────────────────────────────────────
-  void _showMissionDetail(Mission m) {
+  void _showMissionDetail(Map<String, dynamic> m) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
@@ -235,28 +243,27 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
         child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Center(child: Container(width: 50, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
           const SizedBox(height: 16),
-          Text(m.client, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          Text(m.title, style: TextStyle(color: Colors.grey[600])),
+          Text(m['client'], style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          Text(m['title'], style: TextStyle(color: Colors.grey[600])),
           const Divider(height: 28),
-          _infoRow(Icons.access_time, '${m.start} - ${m.end}'),
+          _infoRow(Icons.access_time, '${m['start']} - ${m['end']}'),
           const SizedBox(height: 10),
-          _infoRow(Icons.location_on, m.address),
+          _infoRow(Icons.location_on, m['address']),
           const SizedBox(height: 10),
-          _infoRow(Icons.person, m.contact),
+          _infoRow(Icons.person, m['contact']),
           const SizedBox(height: 10),
-          _infoRow(Icons.phone, m.phone),
+          _infoRow(Icons.phone, m['phone']),
           const SizedBox(height: 20),
           Row(children: [
-            Expanded(child: ElevatedButton.icon(
+            Expanded(child: OutlinedButton.icon(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.close), label: const Text('Fermer'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
             )),
             const SizedBox(width: 12),
             Expanded(child: ElevatedButton.icon(
-              onPressed: () { Navigator.pop(context); _openMap(m.lat, m.lng); },
+              onPressed: () { Navigator.pop(context); _openMap(m['lat'], m['lng']); },
               icon: const Icon(Icons.directions), label: const Text('Itinéraire'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
             )),
           ]),
         ]),
@@ -272,54 +279,26 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
     ]);
   }
 
-  void _showIncidentDialog(Mission m) {
-    String type = 'Retard';
-    final descCtrl = TextEditingController();
+  void _showIncidentDialog(Map<String, dynamic> m) {
     showDialog(
       context: context,
-      builder: (_) => StatefulBuilder(
-        builder: (ctx, setState) => AlertDialog(
-          title: const Text('Signaler un incident'),
-          content: Column(mainAxisSize: MainAxisSize.min, children: [
-            DropdownButtonFormField<String>(
-              value: type,
-              decoration: const InputDecoration(labelText: 'Type'),
-              items: ['Retard', 'Problème technique', 'Client absent', 'Autre']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-              onChanged: (v) => setState(() => type = v!),
-            ),
-            const SizedBox(height: 12),
-            TextField(controller: descCtrl, decoration: const InputDecoration(labelText: 'Description'), maxLines: 3),
-          ]),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
-            ElevatedButton(onPressed: () { Navigator.pop(context); _showSnack('Incident signalé'); }, child: const Text('Envoyer')),
-          ],
-        ),
-      ),
+      builder: (_) => IncidentReportDialog(missionId: m['id']),
     );
   }
 
-  void _showReportDialog(Mission m) {
+  void _showReportDialog(Map<String, dynamic> m) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Rédiger un rapport'),
-        content: TextField(decoration: const InputDecoration(labelText: 'Commentaires'), maxLines: 4),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
-          ElevatedButton(onPressed: () { Navigator.pop(context); _showSnack('Rapport envoyé'); }, child: const Text('Envoyer')),
-        ],
-      ),
+      builder: (_) => SignatureDialog(missionId: m['id']),
     );
   }
 
-  void _updateStatus(Mission m) {
+  void _updateStatus(Map<String, dynamic> m) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Mettre à jour le statut'),
-        content: Text('Passer à "${_nextLabel(m.status)}" ?'),
+        content: Text('Passer à "${_nextLabel(m['status'])}" ?'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
           ElevatedButton(onPressed: () { Navigator.pop(context); _showSnack('Statut mis à jour'); }, child: const Text('Confirmer')),
@@ -339,15 +318,4 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
   String _statusLabel(String s) => {'en_route': 'En route', 'arrived': 'Arrivé', 'in_progress': 'En intervention', 'planned': 'Planifié', 'completed': 'Terminé'}[s] ?? s;
   String _nextLabel(String s) => {'en_route': 'Arrivé', 'arrived': 'En intervention', 'in_progress': 'Terminé'}[s] ?? 'Planifié';
   Color _statusColor(String s) => {'en_route': Colors.orange, 'arrived': Colors.blue, 'in_progress': Colors.green, 'planned': Colors.grey, 'completed': const Color(0xFF0F9D58)}[s] ?? Colors.grey;
-}
-
-class Mission {
-  final int id;
-  final String title, client, address, start, end, status, contact, phone;
-  final double lat, lng;
-
-  Mission({required this.id, required this.title, required this.client,
-    required this.address, required this.lat, required this.lng,
-    required this.start, required this.end, required this.status,
-    required this.contact, required this.phone});
 }
