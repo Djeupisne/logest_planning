@@ -1,36 +1,58 @@
-```
-# Build outputs
-build/
-dist/
-*.apk
-*.aab
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.class
+*.exe
+*.dll
+*.so
+*.a
+*.out
 
 # Dependencies
-.gradle/
 node_modules/
-vendor/
+venv/
+.venv/
+.env
+.env.local
+.env.*
 
-# IDE files
-.idea/
-.vscode/
-*.iml
-*.iws
+# Build outputs
+dist/
+build/
+target/
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# Logs and temp files
+*.log
+*.tmp
 *.swp
 *.swo
 
-# Logs
-*.log
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Environment
-.env
-.env.local
-*.env.*
+# Coverage
+coverage/
+htmlcov/
+.coverage
 
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
 
-# Temporary files
-*.tmp
-*.temp
-```
+# Gradle
+.gradle/
+
+# MyPy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/

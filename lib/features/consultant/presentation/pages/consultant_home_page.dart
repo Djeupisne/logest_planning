@@ -699,7 +699,7 @@ class _ConsultantHomePageState extends State<ConsultantHomePage> {
 
   Future<void> _openMap(double lat, double lng) async {
     // Essayer d'abord avec le schéma geo: (plus fiable sur Android)
-    final geoUri = Uri.parse('geo:$lat,$lng?q=$lat,$lng');
+    final geoUri = Uri.parse('geo:$lat,$lng?q=$lat,$lng&travelmode=driving');
     final httpsUri = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving');
     
     try {
