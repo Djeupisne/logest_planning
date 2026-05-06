@@ -1,0 +1,60 @@
+# 📁 Assets Placeholder
+
+Ce dossier contient les ressources graphiques de l'application LOGEST Planning.
+
+## Structure Recommandée
+
+```
+assets/
+├── images/
+│   ├── logo.png              # Logo principal (1024x1024)
+│   ├── logo_small.png        # Logo pour header (200x200)
+│   ├── onboarding/
+│   │   ├── slide1.png        # Écran d'onboarding 1
+│   │   ├── slide2.png        # Écran d'onboarding 2
+│   │   └── slide3.png        # Écran d'onboarding 3
+│   ├── icons/
+│   │   ├── mission_icon.png  # Icône de mission
+│   │   ├── consultant_icon.png
+│   │   └── client_icon.png
+│   ├── illustrations/
+│   │   ├── empty_state.svg   # État vide (aucune mission)
+│   │   ├── error_state.svg   # État d'erreur
+│   │   └── success_state.svg # État de succès
+│   └── backgrounds/
+│       ├── login_bg.png      # Fond d'écran de connexion
+│       └── splash_bg.png     # Fond de l'écran de lancement
+├── fonts/
+│   └── ...                   # Polices personnalisées si nécessaire
+└── animations/
+    └── ...                   # Fichiers Lottie (.json)
+```
+
+## Recommandations Graphiques
+
+### Couleurs LOGEST
+- **Bleu principal** : `#1976D2`
+- **Bleu foncé** : `#1565C0`
+- **Vert succès** : `#4CAF50`
+- **Orange attention** : `#FF9800`
+- **Rouge erreur** : `#F44336`
+
+### Formats de Fichier
+- **Images** : PNG avec transparence, WebP pour optimisation
+- **Icônes** : SVG de préférence, PNG 2x/3x pour rétina
+- **Illustrations** : SVG ou Lottie pour animations
+- **Tailles** : Prévoir @1x, @2x, @3x pour chaque résolution
+
+### Outils Recommandés
+- **Design** : Figma, Adobe XD
+- **Compression** : TinyPNG, Squoosh
+- **SVG** : SVGO pour optimisation
+- **Animations** : Rive, After Effects + Bodymovin
+
+## Prochaines Étapes
+
+1. Créer le logo officiel LOGEST Planning
+2. Designer les écrans d'onboarding
+3. Créer les icônes personnalisées pour chaque type de mission
+4. Ajouter des illustrations pour les états vides et erreurs
+5. Implémenter des animations Lottie pour les transitions clés
