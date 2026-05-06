@@ -1,11 +1,27 @@
-```dart
-# Miscellaneous
-**/dart_tool/
-**/packages/
-**/.pub/
-**/build/
+# Dependencies
+.dart_tool/
+.build/
 
-# Exceptions
-!packages/**
-!/build/**
-```
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Coverage
+coverage/
+lcov.info
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
