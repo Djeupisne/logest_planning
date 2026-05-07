@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'create_mission_dialog.dart';
 import 'consultant_map_dialog.dart';
+import 'mission_week_view.dart';
+import '../widgets/skill_filter_widget.dart';
+import '../../../core/services/export_notification_service.dart';
 
 class PlannerDashboard extends StatefulWidget {
   const PlannerDashboard({super.key});
@@ -13,6 +16,7 @@ class PlannerDashboard extends StatefulWidget {
 class _PlannerDashboardState extends State<PlannerDashboard>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<Map<String, dynamic>> _filteredConsultants = [];
 
   final List<Map<String, dynamic>> _consultants = [
     {'id': 1, 'name': 'Jean Dupont', 'specialty': 'Réseau', 'status': 'disponible', 'color': Colors.green, 'missions': 3, 'lat': 12.1348, 'lng': 15.0557},
@@ -34,6 +38,7 @@ class _PlannerDashboardState extends State<PlannerDashboard>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _filteredConsultants = List.from(_consultants);
   }
 
   @override
@@ -76,7 +81,7 @@ class _PlannerDashboardState extends State<PlannerDashboard>
         controller: _tabController,
         children: [
           _buildWeeklyPlanning(),
-          _buildConsultantsList(),
+          _buildConsultantsListWithFilters(),
         ],
       ),
     );
@@ -97,80 +102,49 @@ class _PlannerDashboardState extends State<PlannerDashboard>
   }
 
   Widget _buildWeeklyPlanning() {
-    final days = ['Lundi 6', 'Mardi 7', 'Mercredi 8', 'Jeudi 9', 'Vendredi 10'];
-    return SingleChildScrollView(
+    return MissionWeekView(consultants: _consultants, missions: _missions);
+  }
+
+  Widget _buildConsultantsList() {
+    return ListView.builder(
       padding: const EdgeInsets.all(12),
-      child: Column(children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(children: [
-            SizedBox(
-              width: 120,
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const SizedBox(height: 60),
-                ..._consultants.map((c) => Container(
-                  height: 80,
-                  alignment: Alignment.centerLeft,
-                  child: Text(c['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                )),
-              ]),
+      itemCount: _filteredConsultants.length,
+      itemBuilder: (_, index) {
+        final c = _filteredConsultants[index];
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: ListTile(
+            leading: CircleAvatar(backgroundColor: c['color'] as Color, child: Text((c['name'] as String)[0], style: const TextStyle(color: Colors.white))),
+            title: Text(c['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('${c['specialty']} • ${c['missions']} missions'),
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(color: _getStatusColor(c['status'] as String), borderRadius: BorderRadius.circular(20)),
+              child: Text(c['status'] as String, style: const TextStyle(color: Colors.white, fontSize: 12)),
             ),
-            Row(children: days.map((day) => SizedBox(
-              width: 140,
-              child: Column(children: [
-                Container(
-                  height: 50,
-                  color: Colors.blue[50],
-                  child: Center(child: Text(day, style: const TextStyle(fontWeight: FontWeight.bold))),
-                ),
-                ..._consultants.map((c) => Container(
-                  height: 80,
-                  decoration: BoxDecoration(border: Border.all(color: Colors.grey[200]!)),
-                  child: _getMissionsForDay(c['id'], day),
-                )),
-              ]),
-            )).toList()),
-          ]),
+            onTap: () => _showConsultantDetail(c),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildConsultantsListWithFilters() {
+    return Column(
+      children: [
+        SkillFilterWidget(
+          allConsultants: _consultants,
+          onFilteredConsultants: (filtered) {
+            setState(() => _filteredConsultants = filtered);
+          },
         ),
-        const SizedBox(height: 16),
-        _buildLegend(),
-      ]),
+        const SizedBox(height: 12),
+        Expanded(child: _buildConsultantsList()),
+      ],
     );
   }
 
-  Widget _getMissionsForDay(int consultantId, String day) {
-    final dayNum = day.split(' ')[1];
-    final missions = _missions.where((m) => m['consultantId'] == consultantId && m['date'].toString().contains(dayNum)).toList();
-    if (missions.isEmpty) return const SizedBox();
-    return Padding(
-      padding: const EdgeInsets.all(4),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(color: missions.first['color'].withOpacity(0.3), borderRadius: BorderRadius.circular(8)),
-        child: Text(missions.first['title'] as String, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-      ),
-    );
-  }
-
-  Widget _buildLegend() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(children: [
-          const Text('Légende', style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Wrap(spacing: 16, children: [
-            _legendItem('Facturée', Colors.green),
-            _legendItem('Formation', Colors.yellow),
-            _legendItem('Congé', Colors.blue),
-            _legendItem('Inter-contrat', Colors.grey),
-          ]),
-        ]),
-      ),
-    );
-  }
-
-  Widget _legendItem(String label, Color color) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [Container(width: 16, height: 16, color: color), const SizedBox(width: 4), Text(label)],
   );
