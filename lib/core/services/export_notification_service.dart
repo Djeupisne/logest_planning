@@ -216,7 +216,7 @@ class ExportService {
             // Pied de page
             pw.Footer(
               margin: const pw.EdgeInsets.only(top: 20),
-              builder: (pw.Context context) => pw.Column(
+              (pw.Context context) => pw.Column(
                 children: [
                   pw.Divider(),
                   pw.Row(
