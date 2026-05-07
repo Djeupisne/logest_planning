@@ -61,7 +61,7 @@ dependencies:
   # Notifications Push
   firebase_messaging: ^15.2.0       # Notifications push Firebase (version compatible)
   flutter_local_notifications: ^17.2.3 # Notifications locales
-  workmanager: ^0.5.2               # Tâches en arrière-plan
+  # workmanager: 0.5.2               # Tâches en arrière-plan
 
 dev_dependencies:
   flutter_test:
