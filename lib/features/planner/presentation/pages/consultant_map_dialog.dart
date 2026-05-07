@@ -1,5 +1,4 @@
-﻿// lib/features/planner/presentation/pages/consultant_map_dialog.dart
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -19,22 +18,30 @@ class ConsultantMapDialog extends StatelessWidget {
           color: Colors.white,
         ),
         child: Column(children: [
-          // Header
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1976D2),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            decoration: const BoxDecoration(
+              color: Color(0xFF1976D2),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Row(children: [
               const Icon(Icons.map, color: Colors.white),
               const SizedBox(width: 12),
-              const Text('Localisation des consultants', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-              const Spacer(),
-              IconButton(icon: const Icon(Icons.close, color: Colors.white), onPressed: () => Navigator.pop(context)),
+              const Expanded(
+                child: Text(
+                  'Localisation des consultants',
+                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
             ]),
           ),
-          // Carte
           Expanded(child: FlutterMap(
             options: const MapOptions(
               initialCenter: LatLng(12.1348, 15.0557),
@@ -47,50 +54,64 @@ class ConsultantMapDialog extends StatelessWidget {
               ),
               MarkerLayer(
                 markers: consultants.where((c) => c['id'] > 0).map((c) => Marker(
-                  point: LatLng(c['lat'] ?? 12.1348, c['lng'] ?? 15.0557),
-                  width: 50,
-                  height: 50,
+                  point: LatLng(
+                    (c['lat'] as num?)?.toDouble() ?? 12.1348,
+                    (c['lng'] as num?)?.toDouble() ?? 15.0557,
+                  ),
+                  width: 40,
+                  height: 56,
                   child: GestureDetector(
                     onTap: () => _showConsultantInfo(context, c),
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(c['status']),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 3),
-                          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: _getStatusColor(c['status'] as String? ?? ''),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                          ),
+                          child: const Icon(Icons.person, color: Colors.white, size: 18),
                         ),
-                        child: const Icon(Icons.person, color: Colors.white, size: 24),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 4),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 2)],
+                        Container(
+                          margin: const EdgeInsets.only(top: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 2)],
+                          ),
+                          child: Text(
+                            c['name'] as String? ?? '',
+                            style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        child: Text(c['name'], style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                      ),
-                    ]),
+                      ],
+                    ),
                   ),
                 )).toList(),
               ),
             ],
           )),
-          // Légende
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF5F5F5),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
             ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              _legendItem('Disponible', Colors.green),
-              _legendItem('En mission', Colors.orange),
-              _legendItem('Congé', Colors.blue),
-            ]),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _legendItem('Disponible', Colors.green),
+                _legendItem('En mission', Colors.orange),
+                _legendItem('Congé', Colors.blue),
+              ],
+            ),
           ),
         ]),
       ),
@@ -103,35 +124,42 @@ class ConsultantMapDialog extends StatelessWidget {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Center(child: Container(width: 50, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
-          const SizedBox(height: 16),
-          Row(children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundColor: _getStatusColor(consultant['status']),
-              child: const Icon(Icons.person, color: Colors.white, size: 30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: Container(width: 50, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
+            const SizedBox(height: 16),
+            Row(children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: _getStatusColor(consultant['status'] as String? ?? ''),
+                child: const Icon(Icons.person, color: Colors.white, size: 30),
+              ),
+              const SizedBox(width: 16),
+              Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(consultant['name'] as String? ?? '', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Text(consultant['specialty'] as String? ?? '', style: TextStyle(color: Colors.grey[600])),
+                ],
+              )),
+            ]),
+            const Divider(height: 24),
+            _infoRow(Icons.work, '${consultant['missions']} missions'),
+            const SizedBox(height: 8),
+            _infoRow(Icons.info, 'Statut: ${consultant['status']}'),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.close),
+                label: const Text('Fermer'),
+              ),
             ),
-            const SizedBox(width: 16),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(consultant['name'], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              Text(consultant['specialty'] ?? '', style: TextStyle(color: Colors.grey[600])),
-            ])),
-          ]),
-          const Divider(height: 24),
-          _infoRow(Icons.work, '${consultant['missions']} missions'),
-          const SizedBox(height: 8),
-          _infoRow(Icons.info, 'Statut: ${consultant['status']}'),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.close),
-              label: const Text('Fermer'),
-            ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -139,7 +167,7 @@ class ConsultantMapDialog extends StatelessWidget {
   Widget _infoRow(IconData icon, String text) => Row(children: [
     Icon(icon, size: 20, color: Colors.grey[600]),
     const SizedBox(width: 12),
-    Text(text, style: const TextStyle(fontSize: 14)),
+    Flexible(child: Text(text, style: const TextStyle(fontSize: 14))),
   ]);
 
   Color _getStatusColor(String status) {
@@ -151,9 +179,12 @@ class ConsultantMapDialog extends StatelessWidget {
     }
   }
 
-  Widget _legendItem(String label, Color color) => Row(mainAxisSize: MainAxisSize.min, children: [
-    Container(width: 12, height: 12, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-    const SizedBox(width: 6),
-    Text(label, style: const TextStyle(fontSize: 12)),
-  ]);
+  Widget _legendItem(String label, Color color) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(width: 12, height: 12, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+      const SizedBox(width: 6),
+      Flexible(child: Text(label, style: const TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis)),
+    ],
+  );
 }
