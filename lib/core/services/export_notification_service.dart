@@ -15,88 +15,106 @@ class ExportService {
   /// Exporte les données de missions en CSV et sauvegarde le fichier
   Future<String?> exportMissionsToCSV(List<Map<String, dynamic>> missions) async {
     final buffer = StringBuffer();
-    
+
     // En-têtes CSV
     buffer.writeln('ID,Titre,Client,Adresse,Date Début,Date Fin,Statut,Consultant ID,Compétence');
-    
+
     // Données
     for (final mission in missions) {
       buffer.writeln(
-        '${mission['id']},'
-        '"${_escapeCsv(mission['title'])}",'
-        '"${_escapeCsv(mission['clientName'])}",'
-        '"${_escapeCsv(mission['address'])}",'
-        '${_formatDate(mission['scheduledStart'])},'
-        '${_formatDate(mission['scheduledEnd'])},'
-        '${mission['status']},'
-        '${mission['consultantId']},'
-        '"${_escapeCsv(mission['competence'] ?? 'N/A')}"'
+          '${mission['id']},'
+              '"${_escapeCsv(mission['title'])}",'
+              '"${_escapeCsv(mission['clientName'])}",'
+              '"${_escapeCsv(mission['address'])}",'
+              '${_formatDate(mission['scheduledStart'])},'
+              '${_formatDate(mission['scheduledEnd'])},'
+              '${mission['status']},'
+              '${mission['consultantId']},'
+              '"${_escapeCsv(mission['competence'] ?? 'N/A')}"'
       );
     }
-    
+
     final csvData = buffer.toString();
-    
+
     try {
       // Sauvegarder le fichier
       final directory = await getApplicationDocumentsDirectory();
       final filePath = '${directory.path}/missions_export_${DateTime.now().millisecondsSinceEpoch}.csv';
       final file = File(filePath);
       await file.writeAsString(csvData);
-      
+
       // Partager le fichier
       await Share.shareXFiles([XFile(filePath)], subject: 'Export Missions LOGEST');
-      
+
       return filePath;
     } catch (e) {
       debugPrint('Erreur export CSV: $e');
       return null;
     }
   }
-  
+
   /// Exporte les rapports de temps en CSV
   Future<String?> exportTimeReportsToCSV(List<Map<String, dynamic>> reports) async {
     final buffer = StringBuffer();
-    
+
     buffer.writeln('Mission ID,Consultant,Date,Heures Estimées,Heures Réelles,Statut,Client');
-    
+
     for (final report in reports) {
       buffer.writeln(
-        '${report['missionId']},'
-        '"${_escapeCsv(report['consultantName'])}",'
-        '${_formatDate(report['date'])},'
-        '${report['estimatedHours']},'
-        '${report['actualHours']},'
-        '${report['status']},'
-        '"${_escapeCsv(report['clientName'])}"'
+          '${report['missionId']},'
+              '"${_escapeCsv(report['consultantName'])}",'
+              '${_formatDate(report['date'])},'
+              '${report['estimatedHours']},'
+              '${report['actualHours']},'
+              '${report['status']},'
+              '"${_escapeCsv(report['clientName'])}"'
       );
     }
-    
+
     final csvData = buffer.toString();
-    
+
     try {
       final directory = await getApplicationDocumentsDirectory();
       final filePath = '${directory.path}/rapports_temps_${DateTime.now().millisecondsSinceEpoch}.csv';
       final file = File(filePath);
       await file.writeAsString(csvData);
-      
+
       await Share.shareXFiles([XFile(filePath)], subject: 'Rapports Temps LOGEST');
-      
+
       return filePath;
     } catch (e) {
       debugPrint('Erreur export rapports: $e');
       return null;
     }
   }
-  
+
   /// Génère un PDF complet de rapport de mission avec signature
   Future<void> generateMissionReportPDF(Map<String, dynamic> mission, {Uint8List? signatureImage}) async {
     final pdf = pw.Document();
-    
+
     final dateFmt = DateFormat('dd/MM/yyyy HH:mm', 'fr_FR');
-    
+
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
+        footer: (pw.Context context) => pw.Column(
+          children: [
+            pw.Divider(),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Text(
+                  'LOGEST - Rapport généré le ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}',
+                  style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey),
+                ),
+                pw.Text(
+                  'Page ${context.pageNumber}/${context.pagesCount}',
+                  style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey),
+                ),
+              ],
+            ),
+          ],
+        ),
         build: (pw.Context context) {
           return [
             // En-tête
@@ -122,13 +140,16 @@ class ExportService {
                 ],
               ),
             ),
-            
+
             pw.SizedBox(height: 20),
-            
+
             // Informations mission
             pw.Container(
               padding: const pw.EdgeInsets.all(15),
-              decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.blue), borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5))),
+              decoration: pw.BoxDecoration(
+                border: pw.Border.all(color: PdfColors.blue),
+                borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5)),
+              ),
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
@@ -142,13 +163,16 @@ class ExportService {
                 ],
               ),
             ),
-            
+
             pw.SizedBox(height: 15),
-            
+
             // Planning
             pw.Container(
               padding: const pw.EdgeInsets.all(15),
-              decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey), borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5))),
+              decoration: pw.BoxDecoration(
+                border: pw.Border.all(color: PdfColors.grey),
+                borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5)),
+              ),
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
@@ -162,14 +186,17 @@ class ExportService {
                 ],
               ),
             ),
-            
+
             pw.SizedBox(height: 15),
-            
+
             // Commentaires
             if (mission['comments'] != null && (mission['comments'] as String).isNotEmpty) ...[
               pw.Container(
                 padding: const pw.EdgeInsets.all(15),
-                decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey), borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5))),
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.grey),
+                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5)),
+                ),
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
@@ -181,11 +208,14 @@ class ExportService {
               ),
               pw.SizedBox(height: 15),
             ],
-            
+
             // Signature
             pw.Container(
               padding: const pw.EdgeInsets.all(15),
-              decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey), borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5))),
+              decoration: pw.BoxDecoration(
+                border: pw.Border.all(color: PdfColors.grey),
+                borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5)),
+              ),
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
@@ -197,8 +227,12 @@ class ExportService {
                     pw.Container(
                       width: double.infinity,
                       height: 100,
-                      decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey, width: 1, style: pw.BorderStyle.solid)),
-                      child: pw.Center(child: pw.Text('Signature non disponible', style: pw.TextStyle(color: PdfColors.grey))),
+                      decoration: pw.BoxDecoration(
+                        border: pw.Border.all(color: PdfColors.grey, width: 1, style: pw.BorderStyle.solid),
+                      ),
+                      child: pw.Center(
+                        child: pw.Text('Signature non disponible', style: pw.TextStyle(color: PdfColors.grey)),
+                      ),
                     ),
                   pw.SizedBox(height: 10),
                   pw.Row(
@@ -210,31 +244,15 @@ class ExportService {
                 ],
               ),
             ),
-            
-            pw.Spacer(),
-            
-            // Pied de page
-            footer: (pw.Context context) => pw.Column(
-              children: [
-                pw.Divider(),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('LOGEST - Rapport généré le ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
-                    pw.Text('Page ${context.pageNumber}/${context.pagesCount}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
-                  ],
-                ),
-              ],
-            ),
           ];
         },
       ),
     );
-    
+
     // Imprimer ou partager le PDF
     await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
   }
-  
+
   /// Partage un fichier via le système natif
   Future<bool> shareFile(String filePath, {String subject = 'Fichier LOGEST', String text = ''}) async {
     try {
@@ -245,7 +263,7 @@ class ExportService {
       return false;
     }
   }
-  
+
   /// Ouvre un email pré-rempli
   Future<bool> sendEmail({
     required String to,
@@ -258,7 +276,7 @@ class ExportService {
       path: to,
       query: 'subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}',
     );
-    
+
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
       return true;
@@ -267,13 +285,13 @@ class ExportService {
       return false;
     }
   }
-  
+
   // Helpers
   String _escapeCsv(String? value) {
     if (value == null) return '';
     return value.replaceAll('"', '""');
   }
-  
+
   String _formatDate(dynamic date) {
     if (date is DateTime) {
       return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} '
@@ -281,7 +299,7 @@ class ExportService {
     }
     return date.toString();
   }
-  
+
   pw.Widget _buildRow(String label, String value) {
     return pw.Padding(
       padding: const pw.EdgeInsets.only(bottom: 5),
@@ -303,28 +321,28 @@ class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
-  
+
   bool _isInitialized = false;
-  
+
   /// Initialise le service de notifications
   Future<void> init() async {
     if (_isInitialized) return;
-    
+
     // TODO: Intégrer Firebase Cloud Messaging
     // await FirebaseMessaging.instance.requestPermission();
     // await FirebaseMessaging.instance.getToken();
-    
+
     debugPrint('Service de notifications initialisé');
     _isInitialized = true;
   }
-  
+
   /// Demande la permission pour les notifications push
   Future<bool> requestPermission() async {
     // TODO: Implémenter avec firebase_messaging
     debugPrint('Demande de permission pour les notifications');
     return true; // Simulé
   }
-  
+
   /// Affiche une notification locale
   Future<void> showLocalNotification({
     required String title,
@@ -334,7 +352,7 @@ class NotificationService {
   }) async {
     // TODO: Utiliser flutter_local_notifications
     debugPrint('NOTIFICATION LOCALE: $title - $body');
-    
+
     // Simulation avec un print - à remplacer par la vraie implémentation
     // final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     // await flutterLocalNotificationsPlugin.show(
@@ -347,7 +365,7 @@ class NotificationService {
     //   payload: payload,
     // );
   }
-  
+
   /// Programme un rappel pour une mission
   Future<void> scheduleMissionReminder({
     required int missionId,
@@ -356,7 +374,7 @@ class NotificationService {
   }) async {
     // TODO: Utiliser workmanager ou flutter_local_notifications
     debugPrint('Rappel programmé pour la mission $missionId à ${scheduledTime.toString()}');
-    
+
     // Exemple avec flutter_local_notifications:
     // final scheduledDate = scheduledTime.subtract(const Duration(minutes: 30));
     // await flutterLocalNotificationsPlugin.zonedSchedule(
@@ -369,13 +387,13 @@ class NotificationService {
     //   uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     // );
   }
-  
+
   /// Annule un rappel
   Future<void> cancelReminder(int reminderId) async {
     debugPrint('Rappel $reminderId annulé');
     // await flutterLocalNotificationsPlugin.cancel(reminderId);
   }
-  
+
   /// Envoie une notification push (via backend)
   Future<void> sendPushNotification({
     required String userId,
@@ -385,7 +403,7 @@ class NotificationService {
   }) async {
     // TODO: Appeler le backend qui utilisera FCM
     debugPrint('PUSH NOTIFICATION pour $userId: $title - $body');
-    
+
     // Exemple d'appel API au backend:
     // await dio.post('/api/notifications/push', data: {
     //   'user_id': userId,
@@ -394,19 +412,19 @@ class NotificationService {
     //   'data': data,
     // });
   }
-  
+
   /// S'abonne à un topic FCM
   Future<void> subscribeToTopic(String topic) async {
     // await FirebaseMessaging.instance.subscribeToTopic(topic);
     debugPrint('Abonné au topic: $topic');
   }
-  
+
   /// Se désabonne d'un topic FCM
   Future<void> unsubscribeFromTopic(String topic) async {
     // await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
     debugPrint('Désabonné du topic: $topic');
   }
-  
+
   /// Configure les handlers pour les notifications en background
   void setupBackgroundHandlers() {
     // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
