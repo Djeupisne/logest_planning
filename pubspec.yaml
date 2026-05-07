@@ -59,7 +59,7 @@ dependencies:
   introduction_screen: ^3.1.14      # Onboarding moderne
   
   # Notifications Push
-  firebase_messaging: ^14.9.4       # Notifications push Firebase
+  firebase_messaging: ^15.2.0       # Notifications push Firebase (version compatible)
   flutter_local_notifications: ^16.3.2 # Notifications locales
   workmanager: ^0.5.2               # Tâches en arrière-plan
 
@@ -67,7 +67,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  build_runner: ^2.5.4
+  build_runner: ^2.4.14             # Version compatible avec freezed 2.x
   json_serializable: ^6.8.0
   freezed: ^2.5.2
 
