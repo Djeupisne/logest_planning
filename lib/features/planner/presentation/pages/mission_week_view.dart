@@ -1,6 +1,7 @@
 // lib/features/planner/presentation/pages/mission_week_view.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'create_mission_dialog.dart';
 
 /// Widget de planning hebdomadaire détaillé (J+1 à J+5)
 class MissionWeekView extends StatefulWidget {
@@ -208,95 +209,189 @@ class _MissionWeekViewState extends State<MissionWeekView> {
 
     final typeColor = typeColors[mission['type']] ?? Colors.green;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: typeColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: typeColor.withOpacity(0.3)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 4,
-            height: 60,
-            decoration: BoxDecoration(
-              color: typeColor,
-              borderRadius: BorderRadius.circular(2),
+    return GestureDetector(
+      onTap: () => _showMissionDetail(mission),
+      onDoubleTap: () => _editMission(mission),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: typeColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: typeColor.withOpacity(0.3)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 4,
+              height: 60,
+              decoration: BoxDecoration(
+                color: typeColor,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  mission['title'] as String,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(Icons.business, size: 14, color: Colors.grey[600]),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        mission['client'] as String,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    mission['title'] as String,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.business, size: 14, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          mission['client'] as String,
+                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Text(
+                        mission['time'] as String,
                         style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
-                    const SizedBox(width: 4),
-                    Text(
-                      mission['time'] as String,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 10,
-                      backgroundColor: consultant['color'] as Color? ?? Colors.grey,
-                      child: Text(
-                        (consultant['name'] as String)[0],
-                        style: const TextStyle(fontSize: 10, color: Colors.white),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 10,
+                        backgroundColor: consultant['color'] as Color? ?? Colors.grey,
+                        child: Text(
+                          (consultant['name'] as String)[0],
+                          style: const TextStyle(fontSize: 10, color: Colors.white),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      consultant['name'] as String,
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: typeColor,
-                        borderRadius: BorderRadius.circular(10),
+                      const SizedBox(width: 6),
+                      Text(
+                        consultant['name'] as String,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       ),
-                      child: Text(
-                        mission['type'] as String,
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: typeColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          mission['type'] as String,
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showMissionDetail(Map<String, dynamic> mission) {
+    final consultant = widget.consultants.firstWhere(
+      (c) => c['id'] == mission['consultantId'],
+      orElse: () => {'name': 'Non assigné', 'color': Colors.grey},
+    );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20, right: 20, top: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
           ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(width: 50, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
+              const SizedBox(height: 16),
+              Text(mission['title'] as String, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              _detailRow(Icons.business, 'Client', mission['client'] as String),
+              _detailRow(Icons.calendar_today, 'Date', mission['date'] as String),
+              _detailRow(Icons.access_time, 'Horaire', mission['time'] as String),
+              _detailRow(Icons.person, 'Consultant', consultant['name'] as String),
+              _detailRow(Icons.tag, 'Type', mission['type'] as String),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close),
+                      label: const Text('Fermer'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _editMission(mission);
+                      },
+                      icon: const Icon(Icons.edit),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                      label: const Text('Modifier'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _detailRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Colors.grey[600]),
+          const SizedBox(width: 12),
+          Text('$label : ', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(child: Text(value)),
         ],
       ),
     );
+  }
+
+  void _editMission(Map<String, dynamic> mission) {
+    showDialog(
+      context: context,
+      builder: (_) => CreateMissionDialog(
+        consultants: widget.consultants,
+        initialData: mission,
+      ),
+    ).then((updated) {
+      if (updated == true && mounted) {
+        // Ici, on pourrait rafraîchir la liste des missions via un callback
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Mission modifiée avec succès'), backgroundColor: Colors.green),
+        );
+      }
+    });
   }
 
   Widget _buildLegend() {
