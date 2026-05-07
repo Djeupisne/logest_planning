@@ -44,6 +44,8 @@ dependencies:
   vibration: ^2.0.0                 # Feedback haptique (compatible Flutter moderne)
   signature: ^5.4.0                 # Signature électronique avancée
   pdf: ^3.10.8                      # Export PDF signatures
+  printing: ^5.12.0                 # Impression et partage PDF
+  share_plus: ^7.2.1                # Partage de fichiers
   flutter_polyline_points: ^2.0.0   # Trajets GPS optimisés
   reorderable_grid_view: ^2.2.8     # Drag & Drop planning (alternative)
   flutter_localizations:
@@ -55,6 +57,11 @@ dependencies:
   timeline_tile: ^2.0.0             # Timeline missions
   badges: ^3.1.2                    # Badges notifications
   introduction_screen: ^3.1.14      # Onboarding moderne
+  
+  # Notifications Push
+  firebase_messaging: ^14.9.4       # Notifications push Firebase
+  flutter_local_notifications: ^16.3.2 # Notifications locales
+  workmanager: ^0.5.2               # Tâches en arrière-plan
 
 dev_dependencies:
   flutter_test:
