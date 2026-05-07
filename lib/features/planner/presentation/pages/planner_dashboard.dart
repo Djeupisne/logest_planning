@@ -4,7 +4,6 @@ import 'create_mission_dialog.dart';
 import 'consultant_map_dialog.dart';
 import 'mission_week_view.dart';
 import '../widgets/skill_filter_widget.dart';
-import '../../../core/services/export_notification_service.dart';
 
 class PlannerDashboard extends StatefulWidget {
   const PlannerDashboard({super.key});
@@ -145,34 +144,10 @@ class _PlannerDashboardState extends State<PlannerDashboard>
     );
   }
 
+  Widget _legendItem(Color color, String label) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [Container(width: 16, height: 16, color: color), const SizedBox(width: 4), Text(label)],
   );
-
-  Widget _buildConsultantsList() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(12),
-      itemCount: _consultants.length,
-      itemBuilder: (_, index) {
-        final c = _consultants[index];
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: ListTile(
-            leading: CircleAvatar(backgroundColor: c['color'] as Color, child: Text((c['name'] as String)[0], style: const TextStyle(color: Colors.white))),
-            title: Text(c['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('${c['specialty']} • ${c['missions']} missions'),
-            trailing: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(color: _getStatusColor(c['status'] as String), borderRadius: BorderRadius.circular(20)),
-              child: Text(c['status'] as String, style: const TextStyle(color: Colors.white, fontSize: 12)),
-            ),
-            onTap: () => _showConsultantDetail(c),
-          ),
-        );
-      },
-    );
-  }
 
   void _showConsultantDetail(Map<String, dynamic> c) {
     showModalBottomSheet(
