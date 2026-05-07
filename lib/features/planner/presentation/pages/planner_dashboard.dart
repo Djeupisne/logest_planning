@@ -1,5 +1,4 @@
-﻿// lib/features/planner/presentation/pages/planner_dashboard.dart
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'create_mission_dialog.dart';
 import 'consultant_map_dialog.dart';
 import 'mission_week_view.dart';
@@ -7,7 +6,6 @@ import '../widgets/skill_filter_widget.dart';
 
 class PlannerDashboard extends StatefulWidget {
   const PlannerDashboard({super.key});
-
   @override
   State<PlannerDashboard> createState() => _PlannerDashboardState();
 }
@@ -16,7 +14,6 @@ class _PlannerDashboardState extends State<PlannerDashboard>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<Map<String, dynamic>> _filteredConsultants = [];
-
   final List<Map<String, dynamic>> _consultants = [
     {'id': 1, 'name': 'Jean Dupont', 'specialty': 'Réseau', 'status': 'disponible', 'color': Colors.green, 'missions': 3, 'lat': 12.1348, 'lng': 15.0557},
     {'id': 2, 'name': "Marie N'Djamena", 'specialty': 'Développement', 'status': 'en_mission', 'color': Colors.orange, 'missions': 2, 'lat': 12.1200, 'lng': 15.0500},
@@ -24,7 +21,6 @@ class _PlannerDashboardState extends State<PlannerDashboard>
     {'id': 4, 'name': 'Fatima Hassan', 'specialty': 'Formation', 'status': 'congé', 'color': Colors.grey, 'missions': 0, 'lat': 12.1250, 'lng': 15.0650},
     {'id': 5, 'name': 'Oumar Abakar', 'specialty': 'Consulting', 'status': 'disponible', 'color': Colors.purple, 'missions': 2, 'lat': 12.1300, 'lng': 15.0600},
   ];
-
   final List<Map<String, dynamic>> _missions = [
     {'title': 'Installation réseau', 'client': 'Banque Sahélo-Saharienne', 'consultantId': 1, 'date': '2024-05-06', 'time': '09:00-12:00', 'type': 'facturée', 'color': Colors.green},
     {'title': 'Formation Excel', 'client': 'Ministère Finances', 'consultantId': 2, 'date': '2024-05-06', 'time': '14:00-17:00', 'type': 'formation', 'color': Colors.yellow},
@@ -135,7 +131,9 @@ class _PlannerDashboardState extends State<PlannerDashboard>
         SkillFilterWidget(
           allConsultants: _consultants,
           onFilteredConsultants: (filtered) {
-            setState(() => _filteredConsultants = filtered);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() => _filteredConsultants = filtered);
+            });
           },
         ),
         const SizedBox(height: 12),
@@ -191,7 +189,7 @@ class _PlannerDashboardState extends State<PlannerDashboard>
       ),
     );
   }
-  
+
   Widget _infoRow(String label, String value) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 6),
     child: Row(children: [

@@ -1,17 +1,13 @@
-// lib/features/planner/presentation/widgets/skill_filter_widget.dart
 import 'package:flutter/material.dart';
 
-/// Widget de filtrage des consultants par compétences
 class SkillFilterWidget extends StatefulWidget {
   final List<Map<String, dynamic>> allConsultants;
   final Function(List<Map<String, dynamic>>) onFilteredConsultants;
-  
   const SkillFilterWidget({
     super.key,
     required this.allConsultants,
     required this.onFilteredConsultants,
   });
-
   @override
   State<SkillFilterWidget> createState() => _SkillFilterWidgetState();
 }
@@ -19,7 +15,6 @@ class SkillFilterWidget extends StatefulWidget {
 class _SkillFilterWidgetState extends State<SkillFilterWidget> {
   String _selectedSkill = 'Tous';
   String _selectedStatus = 'Tous';
-  
   final List<String> _skills = [
     'Tous',
     'Réseau',
@@ -28,7 +23,6 @@ class _SkillFilterWidgetState extends State<SkillFilterWidget> {
     'Formation',
     'Consulting',
   ];
-  
   final List<String> _statuses = [
     'Tous',
     'disponible',
@@ -39,20 +33,19 @@ class _SkillFilterWidgetState extends State<SkillFilterWidget> {
   @override
   void initState() {
     super.initState();
-    _applyFilters();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _applyFilters();
+    });
   }
 
   void _applyFilters() {
     var filtered = widget.allConsultants;
-    
     if (_selectedSkill != 'Tous') {
       filtered = filtered.where((c) => c['specialty'] == _selectedSkill).toList();
     }
-    
     if (_selectedStatus != 'Tous') {
       filtered = filtered.where((c) => c['status'] == _selectedStatus).toList();
     }
-    
     widget.onFilteredConsultants(filtered);
   }
 
@@ -169,7 +162,6 @@ class _SkillFilterWidgetState extends State<SkillFilterWidget> {
           children: values.map((value) {
             final isSelected = selectedValue == value;
             final color = statusColors?[value] ?? const Color(0xFF1976D2);
-            
             return FilterChip(
               label: Text(value),
               selected: isSelected,
@@ -205,38 +197,30 @@ class _SkillFilterWidgetState extends State<SkillFilterWidget> {
   }
 }
 
-/// Widget d'affectation intelligente par compétences
 class SmartAssignmentWidget extends StatelessWidget {
   final List<Map<String, dynamic>> consultants;
   final String? requiredSkill;
   final Function(int consultantId) onConsultantSelected;
-  
   const SmartAssignmentWidget({
     super.key,
     required this.consultants,
     this.requiredSkill,
     required this.onConsultantSelected,
   });
-
   @override
   Widget build(BuildContext context) {
     final sortedConsultants = List<Map<String, dynamic>>.from(consultants);
     sortedConsultants.sort((a, b) {
       final aHasSkill = requiredSkill == null || a['specialty'] == requiredSkill;
       final bHasSkill = requiredSkill == null || b['specialty'] == requiredSkill;
-      
       if (aHasSkill && !bHasSkill) return -1;
       if (!aHasSkill && bHasSkill) return 1;
-      
       final aAvailable = a['status'] == 'disponible';
       final bAvailable = b['status'] == 'disponible';
-      
       if (aAvailable && !bAvailable) return -1;
       if (!aAvailable && bAvailable) return 1;
-      
       return 0;
     });
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -271,7 +255,6 @@ class SmartAssignmentWidget extends StatelessWidget {
   Widget _buildConsultantTile(Map<String, dynamic> consultant) {
     final hasRequiredSkill = requiredSkill == null || consultant['specialty'] == requiredSkill;
     final isAvailable = consultant['status'] == 'disponible';
-    
     Color statusColor;
     switch (consultant['status']) {
       case 'disponible': statusColor = Colors.green; break;
@@ -279,7 +262,6 @@ class SmartAssignmentWidget extends StatelessWidget {
       case 'congé': statusColor = Colors.blue; break;
       default: statusColor = Colors.grey;
     }
-
     return ListTile(
       enabled: isAvailable && hasRequiredSkill,
       leading: Stack(
