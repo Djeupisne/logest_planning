@@ -216,11 +216,16 @@ class ExportService {
             // Pied de page
             pw.Footer(
               margin: const pw.EdgeInsets.only(top: 20),
-              child: (pw.Context context) => pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              builder: (pw.Context context) => pw.Column(
                 children: [
-                  pw.Text('LOGEST - Rapport généré le ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
-                  pw.Text('Page ${context.pageNumber}/${context.pagesCount}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+                  pw.Divider(),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text('LOGEST - Rapport généré le ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now())}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+                      pw.Text('Page ${context.pageNumber}/${context.pagesCount}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey)),
+                    ],
+                  ),
                 ],
               ),
             ),
